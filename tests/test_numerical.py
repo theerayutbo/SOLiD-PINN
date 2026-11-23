@@ -40,3 +40,44 @@ def test_cycle_smoke():
     assert set(result.stage.unique()) == {"charge", "discharge"}
     assert np.isfinite(result.voltage_v).all()
     assert len(result)>5
+
+
+def test_cutoff_time_is_refined_inside_step(monkeypatch):
+    """A synthetic linear voltage ramp crosses the 4.2 V limit after 60 s."""
+    from solid_pinn.numerical import ElectrochemicalSolution
+    from solid_pinn.validation import capacity_ah
+
+    model = ReducedP2D(nx=3, nr=5)
+    baseline = 0.5 * model.p.max_solid_concentration_mol_m3
+    c0 = np.full((model.nx, model.nr), baseline)
+
+    def fake_solve(surface_c, current_a, stage):
+        voltage = 3.0 + 0.02 * (surface_c[0] - baseline)
+        return ElectrochemicalSolution(
+            voltage, np.zeros(model.nx), np.zeros(model.nx),
+            np.zeros(model.nx), True
+        )
+
+    def fake_step(c, j, dt_s):
+        return c + dt_s
+
+    monkeypatch.setattr(model, "solve_potentials", fake_solve)
+    monkeypatch.setattr(model, "_diffusion_step", fake_step)
+
+    curve, end_c = model.simulate_stage(
+        "charge", c0=c0, c_rate_denominator=20, dt_s=120, max_hours=1
+    )
+    np.testing.assert_allclose(curve.time_h.iloc[-1] * 3600, 60, atol=1e-5)
+    assert curve.voltage_v.iloc[-1] == pytest.approx(4.2, abs=1e-7)
+    assert end_c[0, 0] == pytest.approx(baseline + 60, abs=1e-5)
+    assert capacity_ah(curve, "charge") == pytest.approx(
+        model.p.current_a(20) * 60 / 3600, rel=1e-7
+    )
+
+
+def test_invalid_integration_settings_are_rejected():
+    model = ReducedP2D(nx=3, nr=5)
+    with pytest.raises(ValueError, match="dt_s"):
+        model.simulate_stage("charge", dt_s=float("nan"))
+    with pytest.raises(ValueError, match="max_hours"):
+        model.simulate_stage("charge", max_hours=0)
