@@ -8,7 +8,7 @@ P2D modelling*, Chemical Engineering Journal Advances **18**, 100610.
 https://doi.org/10.1016/j.ceja.2024.100610
 
 > [!IMPORTANT]
-> **Status: v0.1 feasibility prototype, NOT a verified reproduction of the paper.**
+> **Status: v0.5 feasibility prototype, NOT a verified reproduction of the paper.**
 > We transcribed reported physical constants and implemented a reduced P2D
 > finite-volume solver plus an actual physics-informed neural network for
 > **synthetic single-ion electrolyte inverse conductivity**. Experimental
