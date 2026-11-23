@@ -75,6 +75,27 @@ tests/               Conservation, parameters, metrics, smoke, PINN inverse
 docs/                Reproduction protocol and evidence gaps
 ```
 
+## v0.2 numerical verification
+
+The branch `fix/v0.2-physics-validation` improves the feasibility prototype:
+
+- The reduced P2D simulator bisects a time step to locate the first voltage or
+  SoC cutoff, rather than always rounding cycle capacity to the next step.
+- Independent *analytical* spherical-diffusion eigenmode tests exercise spatial
+  and temporal convergence of the radial finite-volume operator.
+- The synthetic SSE inverse PINN now generates dimensional voltages using
+  applied current density, separator thickness and conductivity before
+  normalising them for stable training. A proportionally scaled relative-noise
+  model is invariant to J and L after normalisation, as physics predicts.
+- PINN tests check dimensional voltage scaling and reject invalid noise.
+
+**Limits:** cutoff event interpolation does not eliminate finite-time-step
+integration error. The spherical analytical benchmark is **not** an independent
+full-P2D solver check. PyBaMM/COMSOL-equivalent P2D cross-validation, measured
+OCV traces and research-grade uncertainty quantification remain outstanding.
+
+See [verification guidance](docs/verification.md).
+
 ## Research design
 
 | Module | Target | Current status |
