@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "solid-pinn"
+version = "0.1.0"
+description = "Research reproduction scaffold for Li | Li6PS5Cl | NMC622 P2D battery modelling and physics-informed learning"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{name = "Theerayut Boonkird"}]
+dependencies = ["numpy>=1.24,<3", "scipy>=1.11", "pandas>=2.0", "matplotlib>=3.7"]
+
+[project.optional-dependencies]
+pinn = ["torch>=2.1"]
+dev = ["pytest>=7.4", "ruff>=0.5"]
+
+[project.scripts]
+solid-pinn = "solid_pinn.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
