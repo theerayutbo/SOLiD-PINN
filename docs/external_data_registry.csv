@@ -1,0 +1,6 @@
+key,citation_url,role,chemistry,conditions,data_status,license_and_caveat,used_numerically
+Dessantis2024,https://doi.org/10.1016/j.ceja.2024.100610,primary target and digitised OCV,Li|Li6PS5Cl|NMC622,50 C,figure only no raw trace,CC BY-NC-ND 4.0 do not republish digitised curve,yes private only
+IMOTHEP2023,https://www.imothep-project.eu/files/d4-9-final-battery-model-documentation.pdf,independent NMC622 OCV equation,hybrid electrolyte|NMC622,60 C reported model,Table 3 formula,public file with proprietary rights warning,yes equation only
+Puls2024,https://doi.org/10.1038/s41560-024-01634-3,external validation candidate,In-InLi|Li6PS5Cl|NMC622,variable pressure and loading,source data xlsx online,CC BY 4.0 different anode and protocol,no
+Schomburg2025,https://doi.org/10.5281/zenodo.15688067,independent OCP candidate,liquid electrolyte|NMC622,40 C,pocv_ref_NMC622.mat download unavailable,CC BY 4.0 different chemistry,no
+Narayanan2022,https://doi.org/10.1038/s41467-022-34855-9,interface physical motivation,Li|Li6PS5Cl,varied current density,EIS discussed no numeric priors used,contact changes with cycling not a fixed universal resistor,no
