@@ -125,6 +125,51 @@ class ReducedP2D:
         lu, piv = lu_factor(np.eye(self.nr) - dt_s * self.diffusion_operator)
         return lu_solve((lu, piv), rhs.T).T
 
+    def _state_of_charge(self, c: np.ndarray) -> float:
+        """Volume-weighted mean particle SoC over all axial cells."""
+        mean_c = float(np.mean(c @ self.shell_volumes / np.sum(self.shell_volumes)))
+        return 1.0 - mean_c / self.p.max_solid_concentration_mol_m3
+
+    def _cutoff_margin(self, stage: str, voltage_v: float, soc: float) -> float:
+        """Positive inside the operating region; zero at the first active cutoff."""
+        if stage == "charge":
+            return min(self.p.upper_cutoff_v - voltage_v, 0.995 - soc)
+        return min(voltage_v - self.p.lower_cutoff_v, soc - 0.005)
+
+    def _refine_terminal_step(
+        self,
+        c_start: np.ndarray,
+        sol_start: ElectrochemicalSolution,
+        current_a: float,
+        stage: str,
+        interval_s: float,
+        iterations: int = 32,
+    ) -> tuple[float, np.ndarray, ElectrochemicalSolution]:
+        """Locate a cutoff within a time step, using the same frozen reaction
+        flux and implicit radial diffusion update as the outer integrator.
+
+        This removes the O(dt) endpoint quantisation of capacity. It does NOT
+        remove the time integration error; convergence studies remain essential.
+        """
+        low, high = 0.0, interval_s
+        for _ in range(iterations):
+            mid = 0.5 * (low + high)
+            candidate = self._diffusion_step(
+                c_start, sol_start.reaction_current_a_m2, mid
+            )
+            candidate_sol = self.solve_potentials(candidate[:, -1], current_a, stage)
+            if self._cutoff_margin(
+                stage, candidate_sol.cathode_voltage_v, self._state_of_charge(candidate)
+            ) <= 0:
+                high = mid
+            else:
+                low = mid
+        c_end = self._diffusion_step(
+            c_start, sol_start.reaction_current_a_m2, high
+        )
+        sol_end = self.solve_potentials(c_end[:, -1], current_a, stage)
+        return high, c_end, sol_end
+
     def simulate_stage(
         self, stage: str, c0: np.ndarray | None = None,
         c_rate_denominator: int = 20, dt_s: float = 300.0,
@@ -132,8 +177,10 @@ class ReducedP2D:
     ) -> tuple[pd.DataFrame, np.ndarray]:
         if stage not in {"charge", "discharge"}:
             raise ValueError("stage must be charge or discharge")
-        if dt_s <= 0:
-            raise ValueError("dt_s must be positive")
+        if not np.isfinite(dt_s) or dt_s <= 0:
+            raise ValueError("dt_s must be a positive finite number")
+        if max_hours is not None and (not np.isfinite(max_hours) or max_hours <= 0):
+            raise ValueError("max_hours must be a positive finite number")
         p = self.p
         if c0 is None:
             c = np.full((self.nx, self.nr), (1-p.initial_soc)*p.max_solid_concentration_mol_m3)
@@ -142,23 +189,38 @@ class ReducedP2D:
             if c.shape != (self.nx, self.nr):
                 raise ValueError("c0 shape mismatch")
         current = p.current_a(c_rate_denominator) * (-1 if stage == "charge" else 1)
-        max_t = 3600 * (max_hours or (c_rate_denominator * 1.25))
-        rows = []
-        steps = int(np.ceil(max_t / dt_s))
-        for k in range(steps+1):
-            t = min(k*dt_s, max_t)
-            sol = self.solve_potentials(c[:, -1], current, stage)
-            soc = 1 - float(np.mean(c @ self.shell_volumes / np.sum(self.shell_volumes))) / p.max_solid_concentration_mol_m3
-            rows.append({"time_h":t/3600,"stage":stage,"voltage_v":sol.cathode_voltage_v,
-                         "cell_soc":soc,"current_a":current,"c_denominator":c_rate_denominator})
-            if stage == "charge" and (sol.cathode_voltage_v >= p.upper_cutoff_v or soc >= 0.995):
+        max_t = 3600 * (max_hours if max_hours is not None else c_rate_denominator * 1.25)
+        rows: list[dict] = []
+        time_s = 0.0
+        sol = self.solve_potentials(c[:, -1], current, stage)
+
+        def record(t: float, state: np.ndarray, potential: ElectrochemicalSolution) -> None:
+            rows.append({
+                "time_h": t / 3600, "stage": stage,
+                "voltage_v": potential.cathode_voltage_v,
+                "cell_soc": self._state_of_charge(state),
+                "current_a": current, "c_denominator": c_rate_denominator,
+            })
+
+        while True:
+            record(time_s, c, sol)
+            margin = self._cutoff_margin(stage, sol.cathode_voltage_v, self._state_of_charge(c))
+            if margin <= 0 or time_s >= max_t:
                 break
-            if stage == "discharge" and (sol.cathode_voltage_v <= p.lower_cutoff_v or soc <= 0.005):
+            step_s = min(dt_s, max_t - time_s)
+            c_next = self._diffusion_step(c, sol.reaction_current_a_m2, step_s)
+            next_sol = self.solve_potentials(c_next[:, -1], current, stage)
+            if self._cutoff_margin(
+                stage, next_sol.cathode_voltage_v, self._state_of_charge(c_next)
+            ) <= 0:
+                cutoff_dt, c, sol = self._refine_terminal_step(
+                    c, sol, current, stage, step_s
+                )
+                time_s += cutoff_dt
+                record(time_s, c, sol)
                 break
-            if k == steps or t >= max_t:
-                break
-            actual_dt = min(dt_s,max_t-t)
-            c = self._diffusion_step(c, sol.reaction_current_a_m2, actual_dt)
+            c, sol = c_next, next_sol
+            time_s += step_s
         return pd.DataFrame(rows), c
 
     def simulate_cycle(self, c_rate_denominator: int = 20, dt_s: float = 300.0) -> pd.DataFrame:
