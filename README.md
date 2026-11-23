@@ -142,3 +142,5 @@ python scripts/compare_cross_study_ocv.py --charge-ocv /private/charge.csv \
  --discharge-ocv /private/discharge.csv --c20 /private/c20.csv \
  --c10 /private/c10.csv --c5 /private/c5.csv
 ```
+
+A separate exploratory sensitivity test of NMC622 diffusion using IMOTHEP D4.9 Table 2 is documented in [v0.4 evidence](docs/cross_study_evidence.md); its held-out RMSE change (~0.15%) is too small to claim an improvement.

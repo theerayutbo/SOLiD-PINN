@@ -107,3 +107,33 @@ Li/LPSCl interfacial resistance under matched conditions; request
 original Dessantis voltages and validate with a separately implemented
 custom PyBaMM/FEM model. Do not use a standard liquid-electrolyte DFN
 without modifications.
+
+## Additional parameter-transfer probe: cathode diffusivity
+
+IMOTHEP D4.9 **Table 2, PDF p.11** reports NMC622 solid diffusivity
+`D_s=4.84e-14 m^2/s` for its different AIT cell, compared with the
+`D_s=2.0e-13 m^2/s` value in Dessantis (2024) Table 2 (p.5).
+
+We substituted ONLY this externally reported diffusivity, kept the original
+Dessantis-derived charge/discharge pseudo-OCV, and refitted just cathode
+exchange-current density and initial SoC at C/20 as before.
+**C/10 and C/5 were left held out.**
+
+| Case | C/20 charge/discharge RMSE | C/10 charge/discharge RMSE | C/5 charge/discharge RMSE | Mean 4 held-out |
+|---|---|---|---|---|
+| Dessantis D_s | 52.41 / 95.11 mV | 50.78 / 177.69 mV | 81.32 / 209.05 mV | 129.71 mV |
+| IMOTHEP D_s | 51.62 / 93.87 mV | 50.32 / 177.55 mV | 81.11 / 209.07 mV | **129.51 mV** |
+
+The mean held-out difference is about **0.20 mV (0.15%)**, well below
+the uncertainty of digitised plots and likely below numerical-scheme
+uncertainty. **Do not report this as a meaningful physical improvement or
+a reliable estimate of the target cell's D_s.** The true electrode
+diffusivity can depend on stoichiometry, temperature and fabrication.
+
+Reproduce with the same private input CSVs:
+
+```bash
+python scripts/compare_diffusivity_prior.py \
+  --charge-ocv /private/charge.csv --discharge-ocv /private/discharge.csv \
+  --c20 /private/c20.csv --c10 /private/c10.csv --c5 /private/c5.csv
+```
