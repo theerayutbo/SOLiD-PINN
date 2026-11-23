@@ -121,3 +121,24 @@ See [`data/README.md`](data/README.md) before publishing any claims.
 ## License
 MIT for original project code. The source article remains under its own
 CC BY-NC-ND licence; no paper figures or text are re-licensed here.
+## v0.4 — independent OCV cross-study ablation
+
+A predeclared sensitivity experiment compares Dessantis Figure 4-derived
+charge/discharge pseudo-OCV with the independent AIT/KIT NMC622
+single-valued OCV equation in [IMOTHEP D4.9 Table 3](https://www.imothep-project.eu/files/d4-9-final-battery-model-documentation.pdf).
+Weights 0%, 25% and 50% are **illustrative blends, not physically mixed
+electrode parameters**. Fitting uses only C/20, while C/10 and C/5 are
+held out. Under a four-curve mean held-out voltage-RMSE score, the original
+source OCV remains best: 129.71 mV (baseline), 131.95 mV (25%), 148.34 mV
+(50%); curves are digitised **not experimental raw data**. These figures
+do **not** establish scientific validation, transferability or paper
+reproduction. See [cross-study report](docs/cross_study_evidence.md),
+[citation file](CITATIONS.bib) and
+[source data registry](docs/external_data_registry.csv).
+
+Run on user-authorized input CSVs:
+```bash
+python scripts/compare_cross_study_ocv.py --charge-ocv /private/charge.csv \
+ --discharge-ocv /private/discharge.csv --c20 /private/c20.csv \
+ --c10 /private/c10.csv --c5 /private/c5.csv
+```
