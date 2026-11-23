@@ -1,0 +1,11 @@
+trial_id,version,source_reference,scenario,c20_charge_rmse_mv,c20_discharge_rmse_mv,c10_charge_rmse_mv,c10_discharge_rmse_mv,c5_charge_rmse_mv,c5_discharge_rmse_mv,heldout_mean_rmse_mv,c20_composite_objective,disposition,caveat
+baseline,v0.3–0.5,Dessantis2024,Dessantis-only OCV fitted on C/20,52.41,95.11,50.78,177.69,81.32,209.05,129.71,,baseline,Digitised figures not author raw data
+imothep_25pct,v0.4,Dessantis2024;IMOTHEP2023,25-percent OCV sensitivity blend,16.11,134.42,53.29,172.74,109.38,192.39,131.95,,rejected,Training charge improves but heldout mean worse; unmatched cell
+imothep_50pct,v0.4,Dessantis2024;IMOTHEP2023,50-percent OCV sensitivity blend,41.41,150.23,91.6,166.12,155.95,179.7,148.34,,rejected,Heldout mean worse; unphysical blend
+imothep_ds,v0.4,Dessantis2024;IMOTHEP2023,Substitute D_s 4.84e-14 m2/s and refit C/20,51.62,93.87,50.32,177.55,81.11,209.07,129.51,,inconclusive_not_adopted,Difference 0.20 mV below figure digitisation uncertainty
+asr_0,v0.5,Dessantis2024;Narayanan2022,Li|LPSCl series ASR 0 Ohm cm2,52.408,95.107,50.778,177.69,81.315,209.05,129.7084,0.006020580664829887,selected_grid_baseline,ASR 0 selected in grid only; not physical zero resistance
+asr_0p8,v0.5,Dessantis2024;Singh2023,Li|LPSCl series ASR 0.8 Ohm cm2,52.439,95.103,,,,,,0.00602066602589792,not_selected,0.8 is unmatched microelectrode literature context
+asr_5,v0.5,Dessantis2024,Li|LPSCl series ASR 5 Ohm cm2,52.605,95.085,,,,,,0.006021435326836688,not_selected,Hypothetical grid; heldout not scored for this candidate
+asr_50,v0.5,Dessantis2024,Li|LPSCl series ASR 50 Ohm cm2,54.377,95.11,,,,,,0.006064213091324427,not_selected,Hypothetical grid; heldout not scored for this candidate
+asr_200,v0.5,Dessantis2024,Li|LPSCl series ASR 200 Ohm cm2,60.322,98.399,,,,,,0.006638377261464201,not_selected,Hypothetical grid; heldout not scored for this candidate
+asr_500,v0.5,Dessantis2024,Li|LPSCl series ASR 500 Ohm cm2,72.834,113.846,,,,,,0.00931606224768688,not_selected,Hypothetical grid; heldout not scored for this candidate
