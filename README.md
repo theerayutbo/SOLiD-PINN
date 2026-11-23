@@ -144,3 +144,26 @@ python scripts/compare_cross_study_ocv.py --charge-ocv /private/charge.csv \
 ```
 
 A separate exploratory sensitivity test of NMC622 diffusion using IMOTHEP D4.9 Table 2 is documented in [v0.4 evidence](docs/cross_study_evidence.md); its held-out RMSE change (~0.15%) is too small to claim an improvement.
+
+## Auditable calibration outcomes (v0.3–v0.5)
+
+All evaluated parameter alternatives, including **rejected** and **inconclusive**
+trials, are documented in the [calibration experiment ledger](docs/calibration_experiment_ledger.md)
+and [machine-readable trial metrics](docs/calibration_trial_metrics.csv).
+Source references include the original Dessantis paper, IMOTHEP D4.9,
+Singh/Narayanan interface studies and screened external datasets, with
+BibTeX in [CITATIONS.bib](CITATIONS.bib) and
+[additional v0.5 references](docs/v05_references.bib).
+
+Under the recorded four-stage held-out RMSE metric (C/10 and C/5), the
+Dessantis-only OCV baseline remains **129.71 mV**. Using an unmatched IMOTHEP
+OCV at 25% or 50% gave **131.95 mV** and **148.34 mV**, respectively,
+and was **not adopted**. Substituting IMOTHEP solid diffusivity yielded
+**129.51 mV**, only ~0.20 mV different and **inconclusive**. Optional interface
+ASR candidates up to 500 Ω cm² did not improve the predeclared C/20
+selection objective. The chosen grid scenario remained 0 Ω cm²; this
+**does not imply the physical interface resistance is zero**.
+
+All reported scores are from **locally digitised, non-redistributed figure
+traces**, NOT authors' experimental raw data or independently validated
+full-P2D predictions. A good training fit is **not evidence of transfer**.
