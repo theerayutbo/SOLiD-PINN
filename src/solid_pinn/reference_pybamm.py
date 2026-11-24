@@ -51,7 +51,7 @@ def solve_stage(p=None, stage="charge", rate=20, nx=12, nr=20,
     v = pb.boundary_value(ps,"right")
     soc = 1-pb.Integral(pb.r_average(c),x)/L
     current_integral = a*pb.Integral(j,x)
-    m.variables = {"Voltage [V]":v,"SOC":soc,"Lithium fraction":c,
+    m.variables = {"Voltage [V]":v,"SOC":soc,"Lithium concentration fraction":c,
                    "Electrolyte potential [V]":pe,"Solid potential [V]":ps,
                    "Reaction current [A/m2]":j,"Integrated reaction current [A/m2]":current_integral}
     if stage=="charge":
