@@ -1,6 +1,6 @@
 # v0.6 — independent numerical and COMSOL equation verification
 
-Status: partial verification. No new experimental calibration, no new claim of Dessantis reproduction. The FEM was executed locally on synthetic illustrative OCV. PyBaMM is a separate implementation submitted to CI; check the actual workflow and artifact before calling it verified. COMSOL extraction is a read-only script for an authorized licensed installation, not an executed comparison.
+Status: partial verification. No new experimental calibration, no new claim of Dessantis reproduction. The FEM was executed locally on synthetic illustrative OCV. PyBaMM, independent FEM and original FVM subsequently ran successfully together on GitHub Actions for six matched uniform-start stages (Section B). COMSOL extraction is a read-only script for an authorized licensed installation, not an executed comparison.
 
 ## Reference model contract
 
@@ -27,7 +27,27 @@ FEM nx=6,nr=10 (elements), FVM nx=12,nr=20 (cells). The two runs vary maximum BD
 
 `reference_pybamm.py` defines a custom symbolic single-ion reduced P2D model using BaseModel, spherical particle auxiliary domain, finite-volume discretisation and IDAKLU. It is not the default liquid-electrolyte DFN. The analytic separator boundary is shared as a mathematical assumption, and OCV is approximated on a dense linear interpolation grid. PyBaMM uses surface reconstruction, which differs from the old FVM's outer-shell concentration approximation; quantify that difference rather than silently forcing the outputs to match.
 
-`scripts/verify_pybamm.py` tests six **independent uniform-start stages** at SoC 0.0770454572 (charge) or 0.90 (discharge), not the sequential FEM cycles above. Its results must not be pooled as if the initial discharge profiles were identical. Use the same uniform start for COMSOL. The driver reports common-time voltage RMSE, capacity, SOC balance and integrated current balance. Full field comparisons and mesh refinement remain to be implemented. Run on Python 3.12, `pip install -e '.[dev]' pybamm==25.10.2`, then `python scripts/verify_pybamm.py`. Dedicated GitHub Actions workflow uploads CSV when it actually succeeds. Local package installation was unavailable; no PyBaMM numbers claimed here.
+`scripts/verify_pybamm.py` tests six **independent uniform-start stages** at SoC 0.0770454572 (charge) or 0.90 (discharge), not the sequential FEM cycles above. Its results must not be pooled as if the initial discharge profiles were identical. Use the same uniform start for COMSOL. The driver reports common-time voltage RMSE, capacity, SOC balance and integrated current balance. Full field comparisons and mesh refinement remain to be implemented. Run on Python 3.12, `pip install -e '.[dev]' pybamm==25.10.2`, then `python scripts/verify_pybamm.py`. Dedicated GitHub Actions workflow uploads CSV when it actually succeeds. Local package installation was unavailable; the matched benchmark was executed on GitHub Actions instead. See results below.
+
+### Executed matched three-solver results (2026-11-24)
+
+Source: [successful GitHub Actions run 45448266696](https://github.com/theerayutbo/SOLiD-PINN/actions/runs/45448266696), job 138637943549, Python 3.12, PyBaMM 25.10.2, source commit `887c49c78d6965381f29ab80826002a25245fd61`. The [36-row CSV](results/v06_three_solver_matched.csv) is the actual benchmark output copied from the job log, with timestamp prefixes removed, not a rerun or rounded transcription. Initial failed PyBaMM run 45447366504 identified a variable dictionary name mismatch; corrected in commit 1882fee. The successful run used 12 axial/20 radial elements or cells, 30 s output/step setting, 2001 common-time interpolation points, same stage-specific illustrative OCV and model parameters, and uniform initial SoC 0.0770454572 charge or 0.90 discharge. Each stage starts independently. Do not conflate with sequential cycles in A.
+
+| Rate / stage | PyBaMM vs FEM RMSE (mV) | PyBaMM vs FVM (mV) | FEM vs FVM (mV) |
+|---|---:|---:|---:|
+| C/20 charge | 0.000348 | 0.037025 | 0.037328 |
+| C/20 discharge | 0.004536 | 0.255639 | 0.258260 |
+| C/10 charge | 0.003278 | 0.067302 | 0.067804 |
+| C/10 discharge | 0.018001 | 0.511088 | 0.523945 |
+| C/5 charge | 0.011047 | 0.121852 | 0.122260 |
+| C/5 discharge | 0.073122 | 1.032195 | 1.076421 |
+
+- Voltage RMSE <1 mV: **16/18** pairwise tests pass; C/5 discharge comparisons involving FVM fail. Maximum absolute instantaneous voltage differences in those two cases are 7.940 and 8.026 mV respectively.
+- Capacity difference <0.5%: **18/18** pass; maximum 0.026108%. All 18 solver-stage runs report reaching a cutoff; discharge stops at lower SoC 0.005, not necessarily 2.7 V. Minimum common-duration coverage 99.973899%.
+- SOC balance vs nominal capacity: maximum 4.063e-8%; integrated reaction current balance maximum 0.00013354%. FVM current checked only at terminal state; other solvers at sampled states. These checks do not establish independent physical mass measurements or local field equivalence.
+- Recorded total runtimes for six scenarios: PyBaMM 6.661 s, FEM 12.073 s, FVM 13.538 s on this CI runner. Timing scopes differ and are not controlled performance benchmarks.
+
+PyBaMM/FEM agreement is strong under the shared reduced-model assumptions, not experimental validation. FVM surface-concentration reconstruction and time integration are candidates for the remaining discrepancy; causal attribution is untested. Preserve failed gates; do not claim all three fully equivalent. Full field convergence and matched COMSOL comparison remain outstanding. See [COMSOL collaborator handoff](comsol_v06_handoff.md) for exact inputs and submission protocol.
 
 ## C. COMSOL (licensed model required)
 
@@ -45,4 +65,4 @@ Official documentation: [single-ion conductor interface](https://doc.comsol.com/
 - Sulzer et al. (2021), DOI [10.5334/jors.309](https://doi.org/10.5334/jors.309), PyBaMM framework; [custom half-cell documentation](https://docs.pybamm.org/en/latest/source/examples/notebooks/creating_models/5-half-cell-model.html), modified sign and boundary conventions for this project. See [v05 references](v05_references.bib).
 - COMSOL official references above, not data sources or evidence of execution.
 
-Issue #2 remains open: complete independent PyBaMM run, acquire matched COMSOL model/export, verify concentrations and spatial fields at identical physical time, resolve discharge discrepancy, then validate against author-supplied experimental data. Retain the historical calibration ledger unchanged.
+Issue #2 remains open: acquire matched COMSOL model/export, verify concentrations and spatial fields at identical physical time, resolve discharge discrepancy, then validate against author-supplied experimental data. Retain the historical calibration ledger unchanged.
