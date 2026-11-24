@@ -1,0 +1,76 @@
+{
+  "schema": 1,
+  "purpose": "numerical convergence; no reference data or fitting",
+  "input_sha256": {
+    "charge": "6f4526609a656ee320634d38975c47ea71b36dec08cbfc761d5e4a4469ef4457",
+    "discharge": "0ba51db95aca0d9334854251bd14e80104e6fa4afeab34803a99cc5f5bf65d6c"
+  },
+  "source_sha256": {
+    "run_v073_convergence.py": "6811e98ee9e93989bb1e5abd4dd24d4cf6bb736b52ea5744e6bc3db0c404d641",
+    "paper_reproduction.py": "96745ce223367ed738a81a1e6cca6e3319f42abd6785562c94949d4b25cadb34"
+  },
+  "python": "3.13.5",
+  "numpy": "2.3.5",
+  "scipy": "1.17.0",
+  "pandas": "2.2.3",
+  "case": "historical_kinetics",
+  "params": [
+    0.16144967261842047,
+    0.131,
+    0.0566011934
+  ],
+  "rate": 20,
+  "output_step_s": 30,
+  "plan": [
+    [
+      "mesh_4x10",
+      4,
+      10,
+      120,
+      1e-07,
+      1e-09
+    ],
+    [
+      "mesh_8x20",
+      8,
+      20,
+      120,
+      1e-07,
+      1e-09
+    ],
+    [
+      "mesh_16x40",
+      16,
+      40,
+      120,
+      1e-07,
+      1e-09
+    ],
+    [
+      "step_60",
+      16,
+      40,
+      60,
+      1e-07,
+      1e-09
+    ],
+    [
+      "step_30",
+      16,
+      40,
+      30,
+      1e-07,
+      1e-09
+    ],
+    [
+      "tight_tol",
+      16,
+      40,
+      30,
+      1e-08,
+      1e-10
+    ]
+  ],
+  "state_check": "terminal state only",
+  "comparison": "2001 common-time points, no extrapolation"
+}
