@@ -1,5 +1,5 @@
 """Compare authorized COMSOL result CSVs against FVM with matched protocol.
-CSV: time_s,voltage_v,soc,stage,rate. Each stage starts at its local t=0.
+CSV: time_s,voltage_v,soc,stage,rate,sigma_cathode_s_m. Each stage starts at its local t=0.
 The user must first verify geometry, signs, parameters, initial conditions,
 OCV provenance, events and units using the COMSOL equation audit.
 """
@@ -30,6 +30,10 @@ def compare(path, nx=12, nr=20, dt=30.):
             raise ValueError("invalid stage-local time or nonfinite results")
         s0=.0770454572 if stage=="charge" else .90
         if abs(s[0]-s0)>1e-5: raise ValueError("initial SOC mismatch")
+        if np.any((s<0)|(s>1)): raise ValueError("SOC must be a fraction in [0,1]")
+        margin=np.minimum(4.2-v,.995-s) if stage=="charge" else np.minimum(v-2.7,s-.005)
+        if abs(margin[-1])>1e-4 or np.any(margin[:-1]<-1e-4):
+            raise ValueError("COMSOL stage must end at first matched voltage/SOC cutoff")
         p=replace(Parameters(),initial_soc=s0,exchange_current_cathode_a_m2=.0566011934)
         f,_=ReducedP2D(p,nx,nr).simulate_stage(stage,c_rate_denominator=int(rate),dt_s=dt)
         tf=f.time_h.to_numpy()*3600
