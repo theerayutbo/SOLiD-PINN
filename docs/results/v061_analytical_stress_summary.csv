@@ -1,0 +1,4 @@
+nx,FEM_max_reaction_error_pct,FVM_max_reaction_error_pct
+8,1.703269,1.010314
+16,0.4284684,0.311896
+32,0.1072382,0.08629678
