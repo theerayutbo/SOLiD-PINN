@@ -1,0 +1,4 @@
+rate,reference_discharge_mah_g,literal_paper_discharge_mah_g,comsol_sampled_discharge_mah_g
+20,148.60725,133.46903544530917,147.500
+10,124.7169,133.04607931816142,146.423
+5,99.3201,132.15326795671587,143.469
