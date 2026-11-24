@@ -197,3 +197,7 @@ See [multirate COMSOL audit](docs/comsol_multirate_holdout.md) and [FEM metrics]
 ## Research atlas and v0.7 diagnostics
 
 Start with the [Research Atlas](docs/research_atlas/README.md) for chronological figures, findings, failed trials and linked evidence. The first [v0.7 rate diagnostic](docs/v07_rate_diagnostic.md) tests a C20-only additional terminal ASR; nonnegative fit selects zero, so high-rate reference errors remain unchanged. No new coupled-model validation or experimental prediction claim. Frozen COMSOL transfer remains unchanged.
+
+## v0.7.1 rate capability and capacity fade
+
+The [rate/fade report](docs/v071_rate_fade_decoupling.md) confirms the published rate sequence is consistent with the two collaborator capacity CSVs (22 matching Table 1 anchors). The observed drop largely recovers on returning to C/20; same-rate chronological capacity backtests and conditional rate shortfalls are archived, without using capacity-derived windows as inputs. This is a descriptive single-cell diagnostic, not a coupled solver or causal separation. The [Research Atlas](docs/research_atlas/README.md) now has four additional figures.

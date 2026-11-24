@@ -405,5 +405,135 @@
     "source": "docs/results/v07_asr_diagnostic.csv",
     "min": -0.025,
     "max": 0.16
+  },
+  {
+    "id": "12-cycle-block-capacity",
+    "title": "v0.7.1 | Rate blocks and capacity",
+    "subtitle": "Block means; chronological protocol at 50 C; cycle and rate are confounded",
+    "unit": "Specific capacity (mAh/g)",
+    "categories": [
+      "1–3 C/30",
+      "4–8 C/20",
+      "9–13 C/10",
+      "14–18 C/5",
+      "19–20 C/2",
+      "21–50 C/20"
+    ],
+    "series": [
+      {
+        "name": "Charge",
+        "values": [
+          152.083333,
+          143.922,
+          123.656,
+          99.376,
+          61.59,
+          117.905667
+        ]
+      },
+      {
+        "name": "Discharge",
+        "values": [
+          165.336667,
+          147.02,
+          124.24,
+          98.68,
+          54.18,
+          123.516667
+        ]
+      }
+    ],
+    "source": "docs/results/v071_blocks.csv",
+    "max": 180
+  },
+  {
+    "id": "13-rate-recovery",
+    "title": "v0.7.1 | Recovery on return to C/20",
+    "subtitle": "Fraction of observed cycle 8 to 20 capacity drop recovered; not causal attribution",
+    "unit": "Recovered fraction (%)",
+    "categories": [
+      "Cycle 21",
+      "Cycle 22"
+    ],
+    "series": [
+      {
+        "name": "Charge",
+        "values": [
+          51.848341,
+          91.575829
+        ]
+      },
+      {
+        "name": "Discharge",
+        "values": [
+          95.521882,
+          93.429832
+        ]
+      }
+    ],
+    "source": "docs/results/v071_recovery.csv",
+    "max": 100
+  },
+  {
+    "id": "14-fade-backtest",
+    "title": "v0.7.1 | Frozen same-rate capacity backtest",
+    "subtitle": "Train cycles 22–35; test 36–50; single-cell retrospective comparison",
+    "unit": "Capacity RMSE (mAh/g)",
+    "categories": [
+      "Constant",
+      "Linear",
+      "Exponential"
+    ],
+    "series": [
+      {
+        "name": "Charge",
+        "values": [
+          14.693238,
+          0.885752,
+          1.615471
+        ]
+      },
+      {
+        "name": "Discharge",
+        "values": [
+          13.11847,
+          4.745588,
+          3.597684
+        ]
+      }
+    ],
+    "source": "docs/results/v071_fade_backtest.csv",
+    "max": 16
+  },
+  {
+    "id": "15-conditional-rate-loss",
+    "title": "v0.7.1 | Conditional rate-associated shortfall",
+    "subtitle": "Linear interpolation between C/20 cycles 8 and 22; retrospective assumption",
+    "unit": "Mean shortfall (mAh/g)",
+    "categories": [
+      "C/10",
+      "C/5",
+      "C/2"
+    ],
+    "series": [
+      {
+        "name": "Charge",
+        "values": [
+          14.560429,
+          36.301143,
+          72.309643
+        ]
+      },
+      {
+        "name": "Discharge",
+        "values": [
+          18.095,
+          41.58,
+          84.6275
+        ]
+      }
+    ],
+    "source": "docs/results/v071_conditional_loss.csv",
+    "max": 100
   }
 ]
