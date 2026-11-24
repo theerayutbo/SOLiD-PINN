@@ -35,9 +35,9 @@ def test_independent_solver_linear_limit_and_refinement():
             assert fine['max_reaction_error_pct']<row['max_reaction_error_pct']
 
 
-def test_parameter_correction_is_opt_in():
-    assert Parameters().sigma_cathode_s_m==.171
-    assert corrected_paper_parameters().sigma_cathode_s_m==.17
+def test_parameter_correction_is_default():
+    assert Parameters().sigma_cathode_s_m==.17
+    assert corrected_paper_parameters(Parameters(sigma_cathode_s_m=.171)).sigma_cathode_s_m==.17
 
 
 def test_composition_and_soc_mapping():
