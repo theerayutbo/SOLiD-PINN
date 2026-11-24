@@ -44,6 +44,20 @@ C20-only nonnegative added ASR selects zero and leaves C10/C5 reference errors u
 ![Implied ASR](figures/11-v07-implied-asr.svg)
 The rate/stage-dependent implied corrections are diagnostic, not predictions or measured interface parameters. The model needs additional independent evidence to identify a rate-dependent mechanism. See [v0.7 report](../v07_rate_diagnostic.md).
 
+## v0.7.1 — rate capability and same-rate capacity fade
+
+![Chronological rate blocks](figures/12-cycle-block-capacity.svg)
+The two collaborator cycle CSVs match all 22 retention anchors from Dessantis Table 1. Rate and cycle number remain confounded.
+
+![Capacity recovery](figures/13-rate-recovery.svg)
+By cycle 22, 91.58% of the charge and 93.43% of the discharge drop from cycles 8 to 20 has recovered. Cycle 21 charge recovery is incomplete.
+
+![Same-rate backtest](figures/14-fade-backtest.svg)
+Training cycles 22–35 and testing cycles 36–50 at C/20 gives best retrospective RMSE of 0.886 mAh/g for linear charge and 3.598 mAh/g for exponential discharge. The transition-cycle inclusion sensitivity and all failed alternatives are retained; no independent validation or universal degradation law is claimed.
+
+![Conditional rate shortfall](figures/15-conditional-rate-loss.svg)
+The interpolated C/20 counterfactual uses cycles 8 and 22; the resulting retrospective shortfalls are conditional, not identified causal effects or forecast parameters. See [v0.7.1 report](../v071_rate_fade_decoupling.md), including provenance, assumptions, and bounds.
+
 ## Reproduction and interpretation
 - [Versioned chart data](chart_data.json) links each figure to its metric CSV or report.
 - Run `node scripts/render_research_atlas.mjs` from repository root to regenerate SVGs.
