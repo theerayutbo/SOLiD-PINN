@@ -205,3 +205,7 @@ The [rate/fade report](docs/v071_rate_fade_decoupling.md) confirms the published
 ## v0.7.2 independent paper reproduction audit
 
 [Audit report](docs/v072_paper_reproduction_audit.md) distinguishes a constant-D paper-constrained FEM from the collaborator COMSOL reproduction. Literal 0.131 active fraction gives a conditional full-inventory bound of 133.88 mAh/g; the role of porosity and approximate loading requires independent confirmation. Eleven completed stage results and two new atlas figures are archived; no exact reproduction or improved coupled solver claim. Three local synthetic tests passed; repository CI remains to be checked.
+
+## Resumable Google Colab reproduction (CPU)
+
+[Open in Colab](https://colab.research.google.com/github/theerayutbo/SOLiD-PINN/blob/feat/colab-resumable-reproduction/notebooks/01_Paper_Reproduction.ipynb). The notebook runs the v0.7.2 reproduction with stage-boundary checkpoints on private Drive, hashes of input files and solver sources, and a pinned Git revision. It requires authorized private inputs; prior historical metrics lack restart states, so the first run recomputes all 18 stages. Interrupted stages restart; completed compatible stages resume. No GPU is needed. See notebook setup and regression tests. The notebook has not yet been executed in a Colab runtime.
