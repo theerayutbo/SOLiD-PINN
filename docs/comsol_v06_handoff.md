@@ -1,15 +1,15 @@
-# COMSOL collaborator handoff — matched v0.6 benchmark
+# COMSOL collaborator handoff — corrected v0.6.1 benchmark
 
-The three reference solvers ran successfully in [Actions run 45448266696](https://github.com/theerayutbo/SOLiD-PINN/actions/runs/45448266696) at commit `887c49c78d6965381f29ab80826002a25245fd61`. See [actual benchmark CSV](results/v06_three_solver_matched.csv) and [verification report](v06_independent_verification.md). COMSOL results are pending; do not fabricate or tune to the reference output.
+The original v0.6 results (0.171 S/m) are historical only. The corrected v0.6.1 uses 0.17 S/m after visual verification of Dessantis Table 2 (superscript 1 is a footnote). Run the current branch's three-solver benchmark or use its successful CI artifact; do not compare against the old CSV. See [physics audit](v061_physics_audit.md). COMSOL remains pending.
 
 ## Checkout
 
 ```bash
 git clone https://github.com/theerayutbo/SOLiD-PINN.git
 cd SOLiD-PINN
-git switch feat/v0.6-independent-fem-comsol-audit
+git switch feat/v0.6.1-first-principles-audit
 git pull --ff-only
-git switch -c validation/comsol-v06
+git switch -c validation/comsol-v061
 python -m pip install -e '.[dev]'
 ```
 
@@ -25,7 +25,7 @@ Use the **reduced single-ion model contract** in [the verification report](v06_i
 | Particle radius | 10 µm |
 | Separator ionic conductivity | 0.43 S/m |
 | Cathode effective ionic conductivity | 0.0643935128969 S/m |
-| Cathode electronic conductivity (as coded) | 0.171 S/m |
+| Cathode electronic conductivity (as coded) | 0.17 S/m |
 | NMC lithium diffusion coefficient | 2e-13 m²/s |
 | Maximum lithium concentration | 47664 mol/m³ |
 | Temperature | 323.15 K |
@@ -60,15 +60,15 @@ Use stage-specific interpolation of these values with input SoC=clip(1-c_surface
 ## Return results
 
 1. Run [equation_audit_shell.java](../scripts/comsol/equation_audit_shell.java) in the authorized COMSOL Java Shell with the model loaded; check output for unavailable tables. Record COMSOL version and any equation/sign/units differences. The script has not been executed here.
-2. Export **all six stages** with columns `time_s,voltage_v,soc,stage,rate`; use stage-local t=0, SoC as a fraction (not percent), lowercase charge/discharge, rate as integer denominator. Include exact event row. Export spatial potentials, reaction current and radial concentration at common physical times if available, with units and coordinates.
-3. Save permitted numerical output under `docs/results/comsol/v06_comsol_results.csv`. Add a README in that folder recording COMSOL version, model construction, equations/assumptions, parameter differences, OCV interpolation, mesh/refinement, solver settings, cutoff reason, run date, runtime/hardware and any missing data. Keep proprietary equation exports, copyrighted figures, licensed model files and data without redistribution permission out of the public repo; share privately if authorized.
-4. Run the existing conditional FVM comparator (501 common-time points; distinct from the 2001-point three-solver benchmark) as a preliminary check:
+2. Export **all six stages** with columns `time_s,voltage_v,soc,stage,rate,sigma_cathode_s_m`; use stage-local t=0, SoC as a fraction (not percent), lowercase charge/discharge, rate as integer denominator and sigma_cathode_s_m = 0.17 in every row. Include exact event row. Export spatial potentials, reaction current and radial concentration at common physical times if available, with units and coordinates.
+3. Save permitted numerical output under `docs/results/comsol/v061_comsol_results.csv`. Add a README in that folder recording COMSOL version, model construction, equations/assumptions, parameter differences, OCV interpolation, mesh/refinement, solver settings, cutoff reason, run date, runtime/hardware and any missing data. Keep proprietary equation exports, copyrighted figures, licensed model files and data without redistribution permission out of the public repo; share privately if authorized.
+4. Run the existing conditional FVM comparator (2001 common-time points; pairwise interval may differ from the three-solver common interval) as a preliminary check:
 ```bash
-python scripts/compare_comsol_csv.py docs/results/comsol/v06_comsol_results.csv --out docs/results/comsol/v06_comsol_comparison.csv
+python scripts/compare_comsol_csv.py docs/results/comsol/v061_comsol_results.csv --out docs/results/comsol/v061_comsol_comparison.csv
 git add docs/results/comsol/
-git commit -m "results: add matched COMSOL v0.6 verification with provenance"
-git push -u origin validation/comsol-v06
+git commit -m "results: add matched COMSOL v0.6.1 verification with provenance"
+git push -u origin validation/comsol-v061
 ```
-Open a PR **targeting feat/v0.6-independent-fem-comsol-audit** (not main). If the collaborator lacks write access, use a fork with the same PR target. Do not force push. The final four-way comparison must use identical common-time grids and report failed cases.
+Open a PR **targeting feat/v0.6.1-first-principles-audit** (not main). If the collaborator lacks write access, use a fork with the same PR target. Do not force push. The final four-way comparison must use identical common-time grids and report failed cases.
 
 **Reference:** Dessantis et al. (2024), [DOI](https://doi.org/10.1016/j.ceja.2024.100610); Sulzer et al. (2021), [DOI](https://doi.org/10.5334/jors.309); COMSOL documentation linked in the [verification report](v06_independent_verification.md).

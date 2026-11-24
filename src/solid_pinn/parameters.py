@@ -15,7 +15,7 @@ class Parameters:
     cathode_m: float = 40e-6
     particle_radius_m: float = 10e-6
     kappa_sse_s_m: float = 0.43
-    sigma_cathode_s_m: float = 0.171
+    sigma_cathode_s_m: float = 0.17  # Table 2: superscript 1 is a library footnote
     sigma_aluminium_s_m: float = 3.77e7
     particle_diffusivity_m2_s: float = 2e-13
     max_solid_concentration_mol_m3: float = 47664.0

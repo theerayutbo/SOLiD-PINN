@@ -57,7 +57,7 @@ def benchmark(nx=12,nr=20,dt=30.,rates=(20,10,5)):
                     raise RuntimeError(f"invalid {name} output sizes")
                 # Distinguish a real terminal cutoff from horizon truncation.
                 margin=min(p.upper_cutoff_v-volts[-1],.995-state[-1]) if stage=="charge" else min(volts[-1]-p.lower_cutoff_v,state[-1]-.005)
-                rows.append(dict(kind="solver",rate=rate,stage=stage,solver=name,other="",
+                rows.append(dict(benchmark_id="v061_sigma017",sigma_cathode_s_m=p.sigma_cathode_s_m,kind="solver",rate=rate,stage=stage,solver=name,other="",
                     initial_soc=soc0,nx=nx,nr=nr,dt_s=dt,end_s=times[-1],
                     capacity_mah=abs(I)*times[-1]/3.6,
                     final_voltage_v=volts[-1],final_soc=state[-1],
@@ -69,7 +69,7 @@ def benchmark(nx=12,nr=20,dt=30.,rates=(20,10,5)):
             for a,b in combinations(series,2):
                 ta,va,*_=series[a];tb,vb,*_=series[b]
                 err=np.interp(tt,ta,va)-np.interp(tt,tb,vb)
-                rows.append(dict(kind="pair",rate=rate,stage=stage,solver=a,other=b,
+                rows.append(dict(benchmark_id="v061_sigma017",sigma_cathode_s_m=p.sigma_cathode_s_m,kind="pair",rate=rate,stage=stage,solver=a,other=b,
                     initial_soc=soc0,nx=nx,nr=nr,dt_s=dt,common_end_s=end,
                     common_coverage_pct=100*end/max(ta[-1],tb[-1]),
                     voltage_rmse_mv=1000*np.sqrt(np.mean(err**2)),
@@ -81,7 +81,7 @@ def benchmark(nx=12,nr=20,dt=30.,rates=(20,10,5)):
 
 if __name__=="__main__":
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--out",default="outputs/pybamm_verification.csv")
+    parser.add_argument("--out",default="outputs/v061_three_solver_matched.csv")
     parser.add_argument("--dt",type=float,default=30.)
     parser.add_argument("--nx",type=int,default=12)
     parser.add_argument("--nr",type=int,default=20)

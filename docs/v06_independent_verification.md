@@ -1,4 +1,6 @@
-# v0.6 — independent numerical and COMSOL equation verification
+# v0.6 — historical numerical verification (0.171 S/m)
+
+> Superseded for new COMSOL runs by [v0.6.1 physics audit](v061_physics_audit.md) and the [corrected COMSOL handoff](comsol_v06_handoff.md). Numbers below are preserved from the original runs at the mis-transcribed 0.171 S/m, not re-labelled as corrected results.
 
 Status: partial verification. No new experimental calibration, no new claim of Dessantis reproduction. The FEM was executed locally on synthetic illustrative OCV. PyBaMM, independent FEM and original FVM subsequently ran successfully together on GitHub Actions for six matched uniform-start stages (Section B). COMSOL extraction is a read-only script for an authorized licensed installation, not an executed comparison.
 

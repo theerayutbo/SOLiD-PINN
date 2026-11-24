@@ -168,7 +168,7 @@ All reported scores are from **locally digitised, non-redistributed figure
 traces**, NOT authors' experimental raw data or independently validated
 full-P2D predictions. A good training fit is **not evidence of transfer**.
 
-## v0.6 independent verification (partial)
+## v0.6 independent verification (historical: 0.171 S/m)
 
 The matched PyBaMM/FEM/FVM benchmark successfully ran in [GitHub Actions run 45448266696](https://github.com/theerayutbo/SOLiD-PINN/actions/runs/45448266696). Six independent uniform-start scenarios use the same illustrative OCV and reduced-model parameters. PyBaMM vs FEM voltage RMSE is below 0.074 mV in all six; overall 16/18 pairwise voltage RMSE checks pass the 1 mV target and 18/18 capacity checks pass the 0.5% target. FVM comparisons at C/5 discharge exceed the voltage target. This is numerical verification, not experimental validation.
 
@@ -177,3 +177,7 @@ The matched PyBaMM/FEM/FVM benchmark successfully ran in [GitHub Actions run 454
 - [COMSOL collaborator handoff](docs/comsol_v06_handoff.md) — exact benchmark inputs, equation audit and result export instructions.
 
 COMSOL execution, full spatial-field comparisons and mesh convergence remain outstanding. Issue #2 remains open.
+
+## v0.6.1 corrected benchmark
+
+Dessantis Table 2 reports **0.17 S/m**, not 0.171 (superscript 1 is a footnote). All new runs use 0.17 S/m by default. Historical calibration and v0.6 CSVs remain immutable; rerun them only at their recorded revision. See [first-principles audit](docs/v061_physics_audit.md) and [corrected COMSOL handoff](docs/comsol_v06_handoff.md). Corrected three-solver results must come from the new CI run, not the historical CSV. Phase fractions and usable stoichiometry remain unverified.
