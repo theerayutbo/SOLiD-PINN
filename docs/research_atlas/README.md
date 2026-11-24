@@ -58,6 +58,14 @@ Training cycles 22–35 and testing cycles 36–50 at C/20 gives best retrospect
 ![Conditional rate shortfall](figures/15-conditional-rate-loss.svg)
 The interpolated C/20 counterfactual uses cycles 8 and 22; the resulting retrospective shortfalls are conditional, not identified causal effects or forecast parameters. See [v0.7.1 report](../v071_rate_fade_decoupling.md), including provenance, assumptions, and bounds.
 
+## v0.7.2 — independent paper-constrained reproduction
+
+![Conditional inventory](figures/16-lattice-inventory.svg)
+Treating Table 2's 0.131 as active fraction gives a full lattice capacity of 133.88 mAh/g, below the supplied C20 reference. This depends on the approximate mass loading and ambiguous phase interpretation; it is not proof of a paper error.
+
+![Model comparison](figures/17-paper-comparison.svg)
+The constant-D paper-constrained FEM and collaborator COMSOL simulation both miss higher-rate capacity losses. Eleven actual stage results are archived; remaining trials were interrupted. No new fit or exact reproduction claim. See [audit](../v072_paper_reproduction_audit.md).
+
 ## Reproduction and interpretation
 - [Versioned chart data](chart_data.json) links each figure to its metric CSV or report.
 - Run `node scripts/render_research_atlas.mjs` from repository root to regenerate SVGs.
