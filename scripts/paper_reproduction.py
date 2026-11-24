@@ -36,7 +36,9 @@ class PaperFEM:
         z=root(res,np.r_[np.full(n,J/self.aL),u.mean()+left],jac=jac,tol=1e-10)
         if not np.isfinite(z.x).all() or np.max(abs(res(z.x)))>1e-8:raise RuntimeError('axial residual')
         return z.x[-1],z.x[:n]
-    def stage(self,stage,rate,c0=None):
+    def stage(self,stage,rate,c0=None,*,max_step=120,rtol=1e-7,atol=1e-9,output_step=30):
+        if not all(np.isfinite(v) and v>0 for v in (max_step,rtol,atol,output_step)):raise ValueError("solver options must be finite and positive")
+        if c0 is not None and np.shape(c0)!=self.shape:raise ValueError("initial state shape mismatch")
         I=Q/rate*(-1 if stage=='charge' else 1);c=np.ones(self.shape) if c0 is None else c0.copy()
         def rhs(t,y):
             z=y.reshape(self.shape);j=self.fields(z[:,-1],I,stage)[1];return (z@self.radial.T+j[:,None]*self.flux).ravel()
@@ -45,9 +47,9 @@ class PaperFEM:
         def occ(t,y):return y.min() if stage=='charge' else 1-y.max()
         for e in (voltage,occ):e.terminal=True;e.direction=-1
         if voltage(0,c.ravel())<=0 or occ(0,c.ravel())<=0:raise RuntimeError('initial stage outside bounds')
-        sol=solve_ivp(rhs,(0,rate*1.5*3600),c.ravel(),method='BDF',rtol=1e-7,atol=1e-9,max_step=120,events=[voltage,occ],dense_output=True)
+        sol=solve_ivp(rhs,(0,rate*1.5*3600),c.ravel(),method='BDF',rtol=rtol,atol=atol,max_step=max_step,events=[voltage,occ],dense_output=True)
         if not sol.success:raise RuntimeError(sol.message)
-        t=np.r_[np.arange(0,sol.t[-1],30.),sol.t[-1]];z=sol.sol(t).T.reshape((-1,*self.shape));v=np.array([self.fields(s[:,-1],I,stage)[0] for s in z]);q=t[-1]/3600*abs(I)*1000/M
+        t=np.r_[np.arange(0,sol.t[-1],output_step),sol.t[-1]];z=sol.sol(t).T.reshape((-1,*self.shape));v=np.array([self.fields(s[:,-1],I,stage)[0] for s in z]);q=t[-1]/3600*abs(I)*1000/M
         dm=(self.wx@z[-1]@self.wr-self.wx@c@self.wr)*inventory(self.eps);expected=q*(-1 if stage=='charge' else 1)
         return pd.DataFrame(dict(time_h=t/3600,voltage_v=v)),z[-1],dict(capacity_mah_g=q,termination='voltage' if len(sol.t_events[0]) else 'occupancy' if len(sol.t_events[1]) else 'horizon',final_voltage_v=v[-1],mass_error_mah_g=abs(dm-expected))
 
