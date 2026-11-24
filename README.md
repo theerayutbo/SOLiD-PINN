@@ -167,3 +167,7 @@ selection objective. The chosen grid scenario remained 0 Ω cm²; this
 All reported scores are from **locally digitised, non-redistributed figure
 traces**, NOT authors' experimental raw data or independently validated
 full-P2D predictions. A good training fit is **not evidence of transfer**.
+
+## v0.6 independent verification (partial)
+
+See [cross-solver verification and COMSOL audit](docs/v06_independent_verification.md). The independent Galerkin FEM benchmark ran against the existing FVM using illustrative OCV, not experimental data: voltage RMSE <1 mV for four of six stages, capacity differences <0.5% for all six. C/10 and C/5 discharge remain above the voltage tolerance. PyBaMM has a custom single-ion model and dedicated CI workflow; COMSOL requires an authorized licensed model and equation/CSV export. Neither is counted as an executed validation without its actual results.
