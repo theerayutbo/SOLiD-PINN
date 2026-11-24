@@ -1,0 +1,53 @@
+{
+  "purpose": "reference audit and fixed structural diagnostic, no fit",
+  "reference_sha256": {
+    "5": "bd127f24c6104a70c4756b654b5cf11eab2bc0d7d93708ae7cb8e098326f90ed",
+    "10": "04774e5dc719d75e3f7bd0d3f0447b2b564634e2979ed94451299b143336bb49",
+    "20": "4b9e0f2688a8db78285f8b7b5ad67db4c28f0479196c2f1c5b3bcdf46a5b4c33"
+  },
+  "ocv_sha256": {
+    "charge": "6f4526609a656ee320634d38975c47ea71b36dec08cbfc761d5e4a4469ef4457",
+    "discharge": "0ba51db95aca0d9334854251bd14e80104e6fa4afeab34803a99cc5f5bf65d6c"
+  },
+  "source_sha256": {
+    "run_v073_reference_audit.py": "7912255e735f2ba4af13e1f01cc604c4eba71297cee7b85a92cda740c3c62b88",
+    "paper_reproduction.py": "96745ce223367ed738a81a1e6cca6e3319f42abd6785562c94949d4b25cadb34",
+    "run_v073_convergence.py": "6811e98ee9e93989bb1e5abd4dd24d4cf6bb736b52ea5744e6bc3db0c404d641",
+    "run_v073_inventory_audit.py": "a017ce7798559b92c1b17df475a3477f0378d91849fa1b76f6e709cce11d1f1c"
+  },
+  "python": "3.13.5",
+  "numpy": "2.3.5",
+  "pandas": "2.2.3",
+  "scipy": "1.17.0",
+  "nx": 8,
+  "nr": 20,
+  "case_definitions": [
+    [
+      "historical",
+      0.16144967261842047,
+      1,
+      1
+    ],
+    [
+      "mass_nominal",
+      0.2705633620443582,
+      0.5967166855058195,
+      1
+    ],
+    [
+      "mass_nominal_collaborator_initial",
+      0.2705633620443582,
+      0.5967166855058195,
+      0.9818
+    ]
+  ],
+  "phase": 0.131,
+  "j0": 0.0566011934,
+  "rate": 20,
+  "max_step_s": 120,
+  "rtol": 1e-7,
+  "atol": 1e-9,
+  "output_step_s": 30,
+  "reference_convention": "maximum observed voltage split; duplicate timestamps averaged within stage; RMSE common interval after first 60 s; no extrapolation",
+  "switch_interval": "conditional on reversal between maximum observation and next observation; not verified by current data"
+}
