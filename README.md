@@ -170,4 +170,10 @@ full-P2D predictions. A good training fit is **not evidence of transfer**.
 
 ## v0.6 independent verification (partial)
 
-See [cross-solver verification and COMSOL audit](docs/v06_independent_verification.md). The independent Galerkin FEM benchmark ran against the existing FVM using illustrative OCV, not experimental data: voltage RMSE <1 mV for four of six stages, capacity differences <0.5% for all six. C/10 and C/5 discharge remain above the voltage tolerance. PyBaMM has a custom single-ion model and dedicated CI workflow; COMSOL requires an authorized licensed model and equation/CSV export. Neither is counted as an executed validation without its actual results.
+The matched PyBaMM/FEM/FVM benchmark successfully ran in [GitHub Actions run 45448266696](https://github.com/theerayutbo/SOLiD-PINN/actions/runs/45448266696). Six independent uniform-start scenarios use the same illustrative OCV and reduced-model parameters. PyBaMM vs FEM voltage RMSE is below 0.074 mV in all six; overall 16/18 pairwise voltage RMSE checks pass the 1 mV target and 18/18 capacity checks pass the 0.5% target. FVM comparisons at C/5 discharge exceed the voltage target. This is numerical verification, not experimental validation.
+
+- [Verification report](docs/v06_independent_verification.md)
+- [Executed three-solver results CSV](docs/results/v06_three_solver_matched.csv)
+- [COMSOL collaborator handoff](docs/comsol_v06_handoff.md) — exact benchmark inputs, equation audit and result export instructions.
+
+COMSOL execution, full spatial-field comparisons and mesh convergence remain outstanding. Issue #2 remains open.
