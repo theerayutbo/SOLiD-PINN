@@ -8,7 +8,7 @@ from .parameters import Parameters
 
 
 def corrected_paper_parameters(p=None):
-    """Correct Table 2 footnote transcription; preserve frozen v0.6 defaults."""
+    """Correct Table 2 footnote transcription, including explicitly supplied legacy parameters."""
     return replace(p or Parameters(), sigma_cathode_s_m=0.17)
 
 
