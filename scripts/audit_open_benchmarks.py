@@ -2,6 +2,8 @@
 import argparse
 import csv
 import hashlib
+import io
+import zipfile
 import json
 from pathlib import Path
 import urllib.request
@@ -21,7 +23,16 @@ def hashes(path):
 
 
 def csv_profile(path):
-    with Path(path).open(encoding="utf-8-sig", newline="") as stream:
+    raw = Path(path).read_bytes()
+    try:
+        decoded = raw.decode("utf-8-sig")
+        encoding = "utf-8-sig"
+    except UnicodeDecodeError:
+        decoded = raw.decode("cp1252", errors="strict")
+        encoding = "cp1252 (provisional; verify publisher encoding)"
+    if decoded.lstrip().lower().startswith(("<!doctype html", "<html")):
+        raise ValueError("HTML response, not CSV")
+    with io.StringIO(decoded, newline="") as stream:
         reader = csv.reader(stream)
         header = next(reader, [])
         if not header:
@@ -43,7 +54,7 @@ def csv_profile(path):
                     counts[i]["not_reported"] += 1
                 elif v in {"not applicable", "n/a", "na"}:
                     counts[i]["not_applicable"] += 1
-        return dict(rows=rows, columns=len(header), malformed_rows=malformed,
+        return dict(rows=rows, columns=len(header), malformed_rows=malformed, encoding=encoding,
                     duplicate_header_count=len(header)-len(set(header)),
                     fields=[dict(index=i, name=name, **counts[i]) for i,name in enumerate(header)],
                     note="Literal sentinel classification only; verify against publisher manual.")
@@ -51,25 +62,50 @@ def csv_profile(path):
 
 def xlsx_profile(path):
     from openpyxl import load_workbook
+    validate_workbook(path)
     book = load_workbook(path, read_only=True, data_only=True)
     try:
         sheets = []
         for sheet in book.worksheets:
             # Dimensions are workbook metadata, not audited record counts.
-            sample = list(sheet.iter_rows(min_row=1, max_row=12, max_col=min(sheet.max_column or 40, 40), values_only=True))
+            sample = list(sheet.iter_rows(min_row=1, max_row=12, max_col=min(sheet.max_column or 100, 100), values_only=True))
             sheets.append(dict(name=sheet.title, declared_rows=sheet.max_row,
                                declared_columns=sheet.max_column,
                                populated_sample_cells=sum(v is not None for row in sample for v in row),
-                               sample_rows_examined=len(sample)))
+                               sample_rows_examined=len(sample),
+                               header_candidates=[dict(row=i+1, column=j+1, label=v[:160])
+                                                  for i,row in enumerate(sample[:6])
+                                                  for j,v in enumerate(row) if isinstance(v,str) and v.strip()][:120]))
         return dict(sheets=sheets, note="Inventory only; inspect units, headers, group identity and time/current availability before adapter design.")
     finally:
         book.close()
 
 
+def validate_workbook(path):
+    if not zipfile.is_zipfile(path):
+        raise ValueError("not an XLSX ZIP archive; possible publisher error page")
+    with zipfile.ZipFile(path) as z:
+        if not {"[Content_Types].xml", "xl/workbook.xml"} <= set(z.namelist()):
+            raise ValueError("ZIP does not contain XLSX workbook metadata")
+
+
+def quarantine_known_bad(path):
+    # Only quarantine the exact invalid payload identified in the submitted inventory.
+    if path.suffix == ".xlsx" and path.is_file() and hashes(path)["sha256"] == "32ed63159c77e21ee19ca1b9aa3213ccf0218eb59539560b132a8e68ef0e18ea":
+        dest = path.with_name(path.name + ".invalid-32ed6315")
+        if dest.exists():
+            if hashes(dest)["sha256"] != hashes(path)["sha256"]:
+                raise ValueError("quarantine collision")
+            path.unlink()
+        else:
+            path.rename(dest)
+
+
 def acquire(item, path):
     tmp = path.with_suffix(path.suffix + ".part")
     try:
-        with urllib.request.urlopen(item["url"], timeout=60) as src, tmp.open("wb") as dst:
+        request = urllib.request.Request(item["url"], headers={"User-Agent":"SOLiD-PINN benchmark inventory/0.8.1", "Accept":"application/octet-stream, */*"})
+        with urllib.request.urlopen(request, timeout=60) as src, tmp.open("wb") as dst:
             size = 0
             for block in iter(lambda: src.read(1024 * 1024), b""):
                 size += len(block)
@@ -78,6 +114,10 @@ def acquire(item, path):
                 dst.write(block)
         if item.get("md5") and hashes(tmp)["md5"] != item["md5"]:
             raise ValueError("publisher MD5 mismatch")
+        if path.suffix == ".xlsx":
+            validate_workbook(tmp)
+        elif path.suffix == ".csv":
+            csv_profile(tmp)
         tmp.replace(path)
     finally:
         tmp.unlink(missing_ok=True)
@@ -97,6 +137,8 @@ def run(cache, selected, download=False, registry=REGISTRY):
             path.parent.mkdir(parents=True, exist_ok=True)
             row = dict(source=source["id"], file=item["name"], url=item["url"])
             try:
+                if download:
+                    quarantine_known_bad(path)
                 if not path.exists() and download:
                     acquire(item, path)
                 if not path.is_file():
