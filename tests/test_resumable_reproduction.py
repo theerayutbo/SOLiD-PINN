@@ -62,3 +62,31 @@ def test_manifest_changes_when_inputs_change(tmp_path,monkeypatch):
     (base/"Ref_data_at_C20.csv").write_text("t,v\n0,2.8\n1,4.2\n2,2.7\n")
     third,_=r.setup(base,out)
     assert first!=third
+
+
+def test_execution_status_distinguishes_partial_failure_and_complete():
+    cases, rates = ["literal_0131"], [20]
+    charge = dict(case=cases[0], rate=20, stage="charge", status="complete")
+    discharge = dict(case=cases[0], rate=20, stage="discharge", status="complete")
+    other = dict(case="inventory_derived", rate=5, stage="charge", status="failure")
+    failure = dict(discharge, status="failure")
+    assert r.execution_status([charge, other], cases, rates, 1)["status"] == "partial"
+    assert r.execution_status([charge], cases, rates)["status"] == "failed"
+    assert r.execution_status([charge, failure], cases, rates, 1)["status"] == "failed"
+    result = r.execution_status([charge, discharge, other], cases, rates)
+    assert result == dict(status="complete", completed=2, expected=2, failed=[], missing=[])
+
+
+@pytest.mark.parametrize("limit,stage_status,expected", [
+    (1, "complete", 0), (None, "complete", 1), (1, "failure", 1),
+])
+def test_cli_exit_status(tmp_path, monkeypatch, limit, stage_status, expected):
+    argv = ["runner", str(tmp_path), "--outdir", str(tmp_path),
+            "--case", "literal_0131", "--rate", "20"]
+    if limit is not None:
+        argv += ["--limit-new-stages", str(limit)]
+    monkeypatch.setattr(sys, "argv", argv)
+    monkeypatch.setattr(r, "run_cases", lambda *args: tmp_path)
+    monkeypatch.setattr(r, "summary", lambda run: [
+        dict(case="literal_0131", rate=20, stage="charge", status=stage_status)])
+    assert r.main() == expected
