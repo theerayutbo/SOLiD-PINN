@@ -1,0 +1,36 @@
+{
+  "purpose": "conditional structural diagnostic; no fitting; archived capacities only",
+  "input_sha256": {
+    "charge": "6f4526609a656ee320634d38975c47ea71b36dec08cbfc761d5e4a4469ef4457",
+    "discharge": "0ba51db95aca0d9334854251bd14e80104e6fa4afeab34803a99cc5f5bf65d6c"
+  },
+  "source_sha256": {
+    "run_v073_inventory_audit.py": "a017ce7798559b92c1b17df475a3477f0378d91849fa1b76f6e709cce11d1f1c",
+    "paper_reproduction.py": "96745ce223367ed738a81a1e6cca6e3319f42abd6785562c94949d4b25cadb34",
+    "run_v073_convergence.py": "6811e98ee9e93989bb1e5abd4dd24d4cf6bb736b52ea5744e6bc3db0c404d641"
+  },
+  "python": "3.13.5",
+  "numpy": "2.3.5",
+  "scipy": "1.17.0",
+  "pandas": "2.2.3",
+  "molar_mass_kg_mol": 0.09692828760000001,
+  "loading_kg_m2": 0.05000000000000001,
+  "density_kg_m3": 4619.989900166401,
+  "active_fraction": 0.2705633620443582,
+  "one_li_capacity_mah_g": 276.5131326269757,
+  "nominal_window": 0.5967166855058195,
+  "phase": 0.131,
+  "j0": 0.0566011934,
+  "rate": 20,
+  "nx": 8,
+  "nr": 20,
+  "rtol": 1e-7,
+  "atol": 1e-9,
+  "max_step_s": 120,
+  "output_step_s": 30,
+  "reference": {
+    "charge": 143.50875,
+    "discharge": 148.60725
+  },
+  "reference_scope": "archived duration-derived collaborator capacities, not raw curves"
+}
