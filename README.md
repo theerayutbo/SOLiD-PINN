@@ -189,3 +189,7 @@ A collaborator voltage-only export has been analyzed without redistributing the 
 ## Collaborator COMSOL C/20 parameter transfer
 
 The separate approximate FEM port reads an authorized local COMSOL MPH/ZIP (no COMSOL runtime required to read settings), applies the saved stoichiometric windows, active/ionic fractions, concentration-dependent diffusion and resistance. It does not replace the previous numerical reference model. Local C/20 transfer RMSE vs COMSOL: 0.098 mV charge and 0.062 mV discharge without refitting. This is a comparison to an already fitted simulation, not independent experimental validation. See [transfer report](docs/comsol_c20_transfer.md) and [negative ablations](docs/results/comsol_transfer_c20_summary.csv). Original collaborator files and interpolation arrays are not redistributed. C/10 and C/5 holdouts and field/mesh verification remain open.
+
+## v0.7 frozen-rate prediction (partial)
+
+[Report](docs/v07_frozen_rate_prediction.md) · [Results CSV](docs/results/v07_frozen_rate_summary.csv). The frozen collaborator C/20 parameters predict C/10 and C/5 capacities that decline much less than the published cycling results. The new FVM port and transfer FEM agree in capacity within 0.23% but fail three of four 1 mV voltage gates. PyBaMM transfer and matched external rate validation remain outstanding. No refitting or redistribution of the collaborator's raw model.
