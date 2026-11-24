@@ -181,3 +181,7 @@ COMSOL execution, full spatial-field comparisons and mesh convergence remain out
 ## v0.6.1 corrected benchmark
 
 Dessantis Table 2 reports **0.17 S/m**, not 0.171 (superscript 1 is a footnote). All new runs use 0.17 S/m by default. Historical calibration and v0.6 CSVs remain immutable; rerun them only at their recorded revision. See [first-principles audit](docs/v061_physics_audit.md) and [corrected COMSOL handoff](docs/comsol_v06_handoff.md). Corrected three-solver results must come from the new CI run, not the historical CSV. Phase fractions and usable stoichiometry remain unverified.
+
+## COMSOL C/20 simulation reference (unmatched sequential cycle)
+
+A collaborator voltage-only export has been analyzed without redistributing the raw data. See [COMSOL audit](docs/comsol_c20_reference_audit.md), [exploratory metrics](docs/results/comsol_c20_exploratory_metrics.csv), and [corrected three-solver benchmark](docs/results/v061_three_solver_matched.csv). These are separate protocols; neither constitutes experimental validation. Full COMSOL parameter, current, OCV and equation metadata remain required.
