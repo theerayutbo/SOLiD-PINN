@@ -17,8 +17,12 @@ jobs:
           python-version: '3.12'
       - run: pip install -e '.[dev]' 'pybamm==25.10.2'
       - run: python -c 'import pybamm; print(pybamm.__version__)'
-      - run: python scripts/verify_pybamm.py --out outputs/pybamm_verification.csv
+      - run: python -m pytest -q tests/test_analytical.py
+      - run: python scripts/verify_analytical.py --out outputs/v061_analytic_results.csv
+      - run: python scripts/verify_pybamm.py --out outputs/v061_three_solver_matched.csv
       - uses: actions/upload-artifact@v4
         with:
           name: pybamm-verification
-          path: outputs/pybamm_verification.csv
+          path: |
+            outputs/v061_three_solver_matched.csv
+            outputs/v061_analytic_results.csv
