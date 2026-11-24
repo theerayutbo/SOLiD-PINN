@@ -189,3 +189,7 @@ A collaborator voltage-only export has been analyzed without redistributing the 
 ## Collaborator COMSOL C/20 parameter transfer
 
 The separate approximate FEM port reads an authorized local COMSOL MPH/ZIP (no COMSOL runtime required to read settings), applies the saved stoichiometric windows, active/ionic fractions, concentration-dependent diffusion and resistance. It does not replace the previous numerical reference model. Local C/20 transfer RMSE vs COMSOL: 0.098 mV charge and 0.062 mV discharge without refitting. This is a comparison to an already fitted simulation, not independent experimental validation. See [transfer report](docs/comsol_c20_transfer.md) and [negative ablations](docs/results/comsol_transfer_c20_summary.csv). Original collaborator files and interpolation arrays are not redistributed. C/10 and C/5 holdouts and field/mesh verification remain open.
+
+## Frozen C/20 transfer: C/10 and C/5
+
+See [multirate COMSOL audit](docs/comsol_multirate_holdout.md) and [FEM metrics](docs/results/comsol_multirate_fem_metrics.csv). A standalone implementation of the transfer equations with unchanged C/20 MPH settings achieved <1 mV RMSE in all four C/10/C/5 stages against supplied simulations; the separate single-particle resistance ablations are also preserved. These simulations substantially overpredict the collaborator reference capacities at higher rates, so numerical agreement is not experimental validation. The new driver and tests require CI/reproduction review; raw collaborator inputs remain private.
