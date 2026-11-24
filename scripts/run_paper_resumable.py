@@ -161,6 +161,20 @@ def run_cases(base,outdir,cases=tuple(CASES),rates=RATES,limit=None):
     summary(run)
     return run
 
+def execution_status(rows, cases, rates, limit=None):
+    """Return coverage for the selected plan, not unrelated cached cases."""
+    expected = {(case, rate, stage) for case in cases for rate in rates for stage in STAGES}
+    complete = {(r["case"], r["rate"], r["stage"]) for r in rows
+                if r["status"] == "complete"} & expected
+    failed = {(r["case"], r["rate"], r["stage"]) for r in rows
+              if r["status"] == "failure"} & expected
+    missing = expected - complete
+    status = ("failed" if failed or (missing and limit is None) else
+              "partial" if missing else "complete")
+    return dict(status=status, completed=len(complete), expected=len(expected),
+                failed=sorted(failed), missing=sorted(missing))
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("input_dir")
@@ -171,7 +185,11 @@ def main():
     a=p.parse_args()
     if a.limit_new_stages is not None and a.limit_new_stages<1:
         p.error("limit must be positive")
-    run_cases(a.input_dir,a.outdir,a.case or tuple(CASES),a.rate or RATES,a.limit_new_stages)
+    cases, rates = a.case or tuple(CASES), a.rate or RATES
+    run = run_cases(a.input_dir,a.outdir,cases,rates,a.limit_new_stages)
+    status = execution_status(summary(run), cases, rates, a.limit_new_stages)
+    print("EXECUTION_STATUS", json.dumps(status), flush=True)
+    return 1 if status["status"] == "failed" else 0
 
 if __name__=="__main__":
-    main()
+    raise SystemExit(main())
