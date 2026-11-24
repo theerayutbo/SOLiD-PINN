@@ -201,3 +201,7 @@ Start with the [Research Atlas](docs/research_atlas/README.md) for chronological
 ## v0.7.1 rate capability and capacity fade
 
 The [rate/fade report](docs/v071_rate_fade_decoupling.md) confirms the published rate sequence is consistent with the two collaborator capacity CSVs (22 matching Table 1 anchors). The observed drop largely recovers on returning to C/20; same-rate chronological capacity backtests and conditional rate shortfalls are archived, without using capacity-derived windows as inputs. This is a descriptive single-cell diagnostic, not a coupled solver or causal separation. The [Research Atlas](docs/research_atlas/README.md) now has four additional figures.
+
+## v0.7.2 independent paper reproduction audit
+
+[Audit report](docs/v072_paper_reproduction_audit.md) distinguishes a constant-D paper-constrained FEM from the collaborator COMSOL reproduction. Literal 0.131 active fraction gives a conditional full-inventory bound of 133.88 mAh/g; the role of porosity and approximate loading requires independent confirmation. Eleven completed stage results and two new atlas figures are archived; no exact reproduction or improved coupled solver claim. Three local synthetic tests passed; repository CI remains to be checked.
