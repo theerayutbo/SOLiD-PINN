@@ -66,6 +66,11 @@ Treating Table 2's 0.131 as active fraction gives a full lattice capacity of 133
 ![Model comparison](figures/17-paper-comparison.svg)
 The constant-D paper-constrained FEM and collaborator COMSOL simulation both miss higher-rate capacity losses. Eleven actual stage results are archived; remaining trials were interrupted. No new fit or exact reproduction claim. See [audit](../v072_paper_reproduction_audit.md).
 
+## v0.7.2 — Colab completion
+
+![Full Colab discharge capacity comparison](../results/v072_colab_capacity_error.svg)
+All 18 stages completed; the 11 historical overlaps agree within numerical precision. Only one stage passes the ±3.5% capacity gate. No configuration passes both C20 stages; no scientific calibration or independent experimental validation claim. [Colab evidence](../v072_colab_reproduction.md) and [v0.7.3 gated plan](../v073_convergence_sensitivity_plan.md). The additional figure is a static SVG regenerated from the linked aggregate CSV, separate from the existing atlas renderer.
+
 ## Reproduction and interpretation
 - [Versioned chart data](chart_data.json) links each figure to its metric CSV or report.
 - Run `node scripts/render_research_atlas.mjs` from repository root to regenerate SVGs.
