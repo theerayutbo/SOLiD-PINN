@@ -1,0 +1,17 @@
+// Regenerate figures from the versioned aggregate data. Node.js, no dependencies.
+import fs from 'node:fs';
+import path from 'node:path';
+function render(c){
+ const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");const W=960,H=535,L=105,R=30,T=112,B=390, PW=W-L-R,PH=B-T;const min=c.min??0,max=c.max;const pos=v=>B-(c.log?(Math.log10(v)-Math.log10(min))/(Math.log10(max)-Math.log10(min)):(v-min)/(max-min))*PH;const palette=["#246e8c","#d18d37","#7864a4"];const ticks=c.log?Array.from({length:Math.round(Math.log10(max/min))+1},(_,i)=>min*10**i):Array.from({length:5},(_,i)=>min+(max-min)*i/4);const fmt=n=>Math.abs(n)>=1?Number(n.toPrecision(4)).toString():Number(n.toPrecision(3)).toString();let out=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img"><title>${esc(c.title)}</title><desc>${esc(c.subtitle)}. Source: ${esc(c.source)}</desc><rect width="${W}" height="${H}" fill="#fff"/><g font-family="Arial, sans-serif" fill="#202b39"><text x="28" y="40" font-size="24" font-weight="bold">${esc(c.title)}</text><text x="28" y="67" font-size="14" fill="#526171">${esc(c.subtitle)}</text>`;
+ for(const tick of ticks){let y=pos(tick);out+=`<line x1="${L}" y1="${y}" x2="${W-R}" y2="${y}" stroke="#dbe2e9"/><text x="${L-10}" y="${y+4}" text-anchor="end" font-size="12">${esc(fmt(tick))}</text>`;}
+ const y0=pos(c.log?min:0);out+=`<line x1="${L}" y1="${y0}" x2="${W-R}" y2="${y0}" stroke="#64748b"/><text transform="translate(24 ${T+PH/2}) rotate(-90)" text-anchor="middle" font-size="14">${esc(c.unit)}</text>`;
+ const step=PW/c.categories.length,bw=Math.min(47,step*.72/c.series.length);
+ c.categories.forEach((label,i)=>{let x=L+(i+.5)*step;out+=`<text x="${x}" y="${B+23}" text-anchor="middle" font-size="12">${esc(label)}</text>`;c.series.forEach((s,j)=>{let v=s.values[i], y=pos(v), bx=x+(j-(c.series.length-1)/2)*bw-bw*.44,top=Math.min(y,y0),height=Math.abs(y-y0);out+=`<rect x="${bx}" y="${top}" width="${bw*.88}" height="${height}" fill="${palette[j]}" rx="1"><title>${esc(label)} · ${esc(s.name)}: ${esc(v)}</title></rect><text x="${bx+bw*.44}" y="${v>=0?top-5:y+13}" text-anchor="middle" font-size="${c.categories.length>5?9:11}" fill="#253344">${esc(fmt(v))}</text>`;});});
+ if(c.gate!==undefined){let y=pos(c.gate);out+=`<line x1="${L}" y1="${y}" x2="${W-R}" y2="${y}" stroke="#ae3636" stroke-width="1.5" stroke-dasharray="7 5"/><text x="${W-R-2}" y="${y-6}" text-anchor="end" fill="#a12d2d" font-size="11">Project gate ${c.gate}</text>`;}
+ if(c.xLabel)out+=`<text x="${L+PW/2}" y="${B+43}" text-anchor="middle" font-size="12">${esc(c.xLabel)}</text>`;
+ let lx=105;c.series.forEach((s,j)=>{out+=`<rect x="${lx}" y="455" width="13" height="13" fill="${palette[j]}"/><text x="${lx+20}" y="466" font-size="13">${esc(s.name)}</text>`;lx+=Math.max(170,s.name.length*8+35);});out+=`<text x="28" y="505" font-size="11" fill="#526171">Source: ${esc(c.source)}</text><text x="28" y="522" font-size="11" fill="#526171">SOLiD-PINN research atlas · protocols differ between figures; compare only within each figure.</text></g></svg>`;return out;
+}
+const root=process.cwd();
+const charts=JSON.parse(fs.readFileSync(path.join(root,'docs/research_atlas/chart_data.json'),'utf8'));
+const out=path.join(root,'docs/research_atlas/figures');fs.mkdirSync(out,{recursive:true});
+for(const c of charts)fs.writeFileSync(path.join(out,c.id+'.svg'),render(c)+'\n');
