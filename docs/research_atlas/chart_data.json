@@ -535,5 +535,67 @@
     ],
     "source": "docs/results/v071_conditional_loss.csv",
     "max": 100
+  },
+  {
+    "id": "16-lattice-inventory",
+    "title": "v0.7.2 | Conditional lithium inventory bound",
+    "subtitle": "Full occupancy range; fixed Table 2 geometry and approximate mass loading",
+    "unit": "Specific capacity (mAh/g)",
+    "categories": [
+      "Table 2: 0.131",
+      "Derived: 0.16145",
+      "COMSOL: 0.2706"
+    ],
+    "series": [
+      {
+        "name": "Full inventory",
+        "values": [
+          133.880729824,
+          165,
+          276.55057626240006
+        ]
+      }
+    ],
+    "source": "docs/v072_paper_reproduction_audit.md",
+    "max": 300
+  },
+  {
+    "id": "17-paper-comparison",
+    "title": "v0.7.2 | Paper-constrained FEM vs COMSOL",
+    "subtitle": "Discharge capacity; Model A voltage events, COMSOL sampled endpoints",
+    "unit": "Specific capacity (mAh/g)",
+    "categories": [
+      "C/20",
+      "C/10",
+      "C/5"
+    ],
+    "series": [
+      {
+        "name": "Reference",
+        "values": [
+          148.60725,
+          124.7169,
+          99.3201
+        ]
+      },
+      {
+        "name": "Model A: literal 0.131",
+        "values": [
+          133.46903544530917,
+          133.04607931816142,
+          132.15326795671587
+        ]
+      },
+      {
+        "name": "COMSOL",
+        "values": [
+          147.5,
+          146.423,
+          143.469
+        ]
+      }
+    ],
+    "source": "docs/results/v072_discharge_comparison.csv",
+    "max": 180
   }
 ]
