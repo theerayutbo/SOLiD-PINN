@@ -185,3 +185,7 @@ Dessantis Table 2 reports **0.17 S/m**, not 0.171 (superscript 1 is a footnote).
 ## COMSOL C/20 simulation reference (unmatched sequential cycle)
 
 A collaborator voltage-only export has been analyzed without redistributing the raw data. See [COMSOL audit](docs/comsol_c20_reference_audit.md), [exploratory metrics](docs/results/comsol_c20_exploratory_metrics.csv), and [corrected three-solver benchmark](docs/results/v061_three_solver_matched.csv). These are separate protocols; neither constitutes experimental validation. Full COMSOL parameter, current, OCV and equation metadata remain required.
+
+## Collaborator COMSOL C/20 parameter transfer
+
+The separate approximate FEM port reads an authorized local COMSOL MPH/ZIP (no COMSOL runtime required to read settings), applies the saved stoichiometric windows, active/ionic fractions, concentration-dependent diffusion and resistance. It does not replace the previous numerical reference model. Local C/20 transfer RMSE vs COMSOL: 0.098 mV charge and 0.062 mV discharge without refitting. This is a comparison to an already fitted simulation, not independent experimental validation. See [transfer report](docs/comsol_c20_transfer.md) and [negative ablations](docs/results/comsol_transfer_c20_summary.csv). Original collaborator files and interpolation arrays are not redistributed. C/10 and C/5 holdouts and field/mesh verification remain open.
