@@ -1,0 +1,5 @@
+stage,return_cycle,capacity_gain_from_cycle20_mah_g,recovered_fraction_of_cycle8_to20_drop_pct,same_rate_gap_vs_cycle8_mah_g,subsequent_fade_to50_mah_g,subsequent_fade_to50_pct
+charge,21,43.76,51.848341,40.64,-5.96,-6.014127
+charge,22,77.29,91.575829,7.11,27.57,20.787152
+discharge,21,84.47,95.521882,3.96,26.17,18.743733
+discharge,22,82.62,93.429832,5.81,24.32,17.652609
