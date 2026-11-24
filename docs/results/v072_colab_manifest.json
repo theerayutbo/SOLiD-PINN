@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "revision": "aa8a1bb95a444e339d8ecfb45db0661099d2df8f",
+  "input_sha256": {
+    "Ref_data_at_C20.csv": "4b9e0f2688a8db78285f8b7b5ad67db4c28f0479196c2f1c5b3bcdf46a5b4c33",
+    "Ref_data_at_C10.csv": "04774e5dc719d75e3f7bd0d3f0447b2b564634e2979ed94451299b143336bb49",
+    "Ref_data_at_C5.csv": "bd127f24c6104a70c4756b654b5cf11eab2bc0d7d93708ae7cb8e098326f90ed",
+    "SOLiD-PINN-OCV-Figure4/ocv_charge_digitized.csv": "6f4526609a656ee320634d38975c47ea71b36dec08cbfc761d5e4a4469ef4457",
+    "SOLiD-PINN-OCV-Figure4/ocv_discharge_digitized.csv": "0ba51db95aca0d9334854251bd14e80104e6fa4afeab34803a99cc5f5bf65d6c"
+  },
+  "source_sha256": {
+    "run_paper_resumable.py": "d10b53798de3ec999b3a388302db4d6d211881101ebcab9fdd86d8b10d12b180",
+    "paper_reproduction.py": "fd866684878e0eb4746d4c5e8deb1b5017a810eb9e44d8049bafb7efd3303811"
+  },
+  "python": "3.13.18",
+  "numpy": "2.2.6",
+  "scipy": "1.15.3",
+  "pandas": "2.2.3",
+  "cases": {
+    "literal_0131": [
+      0.131,
+      0.131,
+      6.59173895
+    ],
+    "inventory_derived": [
+      0.16144967261842047,
+      0.131,
+      6.59173895
+    ],
+    "historical_kinetics": [
+      0.16144967261842047,
+      0.131,
+      0.0566011934
+    ]
+  },
+  "rates": [
+    20,
+    10,
+    5
+  ],
+  "nx": 4,
+  "nr": 10,
+  "max_step_s": 120,
+  "output_step_s": 30,
+  "rtol": 1e-07,
+  "atol": 1e-09,
+  "note": "Stage-local common time; private collaborator reference, not author-verified raw data"
+}
