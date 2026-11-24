@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "checked": "2026-11-24",
+  "status": "publisher metadata verified; file contents not yet acquired",
+  "sources": [
+    {
+      "id": "umd",
+      "role": "material-prior and reporting completeness",
+      "source": "https://drum.lib.umd.edu/items/156429b8-2dc2-4078-b293-8d33e077bc91",
+      "license": "CC0-1.0",
+      "chemistry": "mixed solid-state cells",
+      "files": [
+        {
+          "name": "master.csv",
+          "url": "https://drum.lib.umd.edu/bitstreams/634d9d96-e2f3-4b79-9749-c457b9364f32/download"
+        }
+      ]
+    },
+    {
+      "id": "puls2024",
+      "role": "cross-lab experimental curves and metadata",
+      "source": "https://doi.org/10.1038/s41560-024-01634-3",
+      "license": "CC-BY-4.0 article; confirm file-specific notices before redistribution",
+      "chemistry": "NMC622/Li6PS5Cl/In-Li, not Li metal",
+      "files": [
+        {
+          "name": "processing.xlsx",
+          "url": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41560-024-01634-3/MediaObjects/41560_2024_1634_MOESM2_ESM.xlsx"
+        },
+        {
+          "name": "cycling.xlsx",
+          "url": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41560-024-01634-3/MediaObjects/41560_2024_1634_MOESM6_ESM.xlsx"
+        },
+        {
+          "name": "curves.xlsx",
+          "url": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41560-024-01634-3/MediaObjects/41560_2024_1634_MOESM7_ESM.xlsx"
+        }
+      ]
+    },
+    {
+      "id": "liopa",
+      "role": "interface diagnostics EIS/ASR and cycling",
+      "source": "https://doi.org/10.5281/zenodo.17816356",
+      "license": "CC-BY-4.0",
+      "chemistry": "Li6PS5Cl0.5Br0.5, surface treatments; distinct from Dessantis",
+      "files": [
+        {
+          "name": "main.xlsx",
+          "url": "https://zenodo.org/records/17816356/files/Main%20manuscript%20Data%20-%20LiOPA.xlsx?download=1",
+          "md5": "5d130a457055022b7b582f1473f52314"
+        },
+        {
+          "name": "supporting.xlsx",
+          "url": "https://zenodo.org/records/17816356/files/Supporting%20Information%20-%20LiOPA.xlsx?download=1",
+          "md5": "59d83f67922361c57e89af56901cdd32"
+        }
+      ]
+    },
+    {
+      "id": "dessantis2024",
+      "role": "legacy paper-constrained numerical reproduction",
+      "source": "https://doi.org/10.1016/j.ceja.2024.100610",
+      "license": "private collaborator data; do not redistribute",
+      "chemistry": "Li metal/Li6PS5Cl/NMC622",
+      "files": []
+    },
+    {
+      "id": "pinnstripes",
+      "role": "numerical AI methodology, not ASSB validation",
+      "source": "https://github.com/NatLabRockies/PINNSTRIPES",
+      "license": "BSD-3-Clause",
+      "chemistry": "conventional Li-ion",
+      "files": []
+    },
+    {
+      "id": "sinzig2024",
+      "role": "P2D model-form validity literature",
+      "source": "https://arxiv.org/abs/2408.05771",
+      "license": "literature; review file-specific rights",
+      "chemistry": "solid-state P2D",
+      "files": []
+    }
+  ]
+}
