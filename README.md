@@ -193,3 +193,7 @@ The separate approximate FEM port reads an authorized local COMSOL MPH/ZIP (no C
 ## Frozen C/20 transfer: C/10 and C/5
 
 See [multirate COMSOL audit](docs/comsol_multirate_holdout.md) and [FEM metrics](docs/results/comsol_multirate_fem_metrics.csv). A standalone implementation of the transfer equations with unchanged C/20 MPH settings achieved <1 mV RMSE in all four C/10/C/5 stages against supplied simulations; the separate single-particle resistance ablations are also preserved. These simulations substantially overpredict the collaborator reference capacities at higher rates, so numerical agreement is not experimental validation. The new driver and tests require CI/reproduction review; raw collaborator inputs remain private.
+
+## Research atlas and v0.7 diagnostics
+
+Start with the [Research Atlas](docs/research_atlas/README.md) for chronological figures, findings, failed trials and linked evidence. The first [v0.7 rate diagnostic](docs/v07_rate_diagnostic.md) tests a C20-only additional terminal ASR; nonnegative fit selects zero, so high-rate reference errors remain unchanged. No new coupled-model validation or experimental prediction claim. Frozen COMSOL transfer remains unchanged.

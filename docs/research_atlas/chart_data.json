@@ -1,0 +1,409 @@
+[
+  {
+    "id": "01-calibration",
+    "title": "v0.3–v0.4 | Held-out calibration",
+    "subtitle": "C/10 & C/5; mean of four stage RMSEs; digitised data",
+    "unit": "Voltage RMSE (mV)",
+    "categories": [
+      "Dessantis",
+      "25% blend",
+      "50% blend",
+      "Alt. D"
+    ],
+    "series": [
+      {
+        "name": "Held-out mean",
+        "values": [
+          129.71,
+          131.95,
+          148.34,
+          129.51
+        ]
+      }
+    ],
+    "source": "docs/calibration_trial_metrics.csv",
+    "max": 160
+  },
+  {
+    "id": "02-interface-asr",
+    "title": "v0.5 | Constant interface resistance",
+    "subtitle": "C/20 calibration sensitivity; unselected trials retained",
+    "unit": "Voltage RMSE (mV)",
+    "categories": [
+      "0",
+      "0.8",
+      "5",
+      "50",
+      "200",
+      "500"
+    ],
+    "series": [
+      {
+        "name": "charge",
+        "values": [
+          52.408,
+          52.439,
+          52.605,
+          54.377,
+          60.322,
+          72.834
+        ]
+      },
+      {
+        "name": "discharge",
+        "values": [
+          95.107,
+          95.103,
+          95.085,
+          95.11,
+          98.399,
+          113.846
+        ]
+      }
+    ],
+    "source": "docs/calibration_trial_metrics.csv",
+    "max": 120,
+    "xLabel": "Additional ASR (Ω cm²)"
+  },
+  {
+    "id": "03-cross-solver",
+    "title": "v0.6.1 | Three-solver verification",
+    "subtitle": "Corrected 0.17 S/m; uniform-start stages; logarithmic scale",
+    "unit": "Voltage RMSE (mV)",
+    "categories": [
+      "C/20 chg",
+      "C/20 dis",
+      "C/10 chg",
+      "C/10 dis",
+      "C/5 chg",
+      "C/5 dis"
+    ],
+    "series": [
+      {
+        "name": "PyBaMM–FEM",
+        "values": [
+          0.0003487282485196873,
+          0.004536250490487136,
+          0.003279572961808027,
+          0.01800111585270262,
+          0.01104759629101263,
+          0.07312200843258243
+        ]
+      },
+      {
+        "name": "PyBaMM–FVM",
+        "values": [
+          0.037023607928367855,
+          0.25563896784669166,
+          0.06729850977618045,
+          0.511086787880232,
+          0.12184509270757572,
+          1.0321936500959141
+        ]
+      },
+      {
+        "name": "FEM–FVM",
+        "values": [
+          0.037327643045962124,
+          0.2582596524528519,
+          0.06780259614492926,
+          0.5239445572232098,
+          0.12225657677778773,
+          1.0764198878746947
+        ]
+      }
+    ],
+    "source": "docs/results/v061_three_solver_matched.csv",
+    "log": true,
+    "min": 0.0001,
+    "max": 10,
+    "gate": 1
+  },
+  {
+    "id": "04-analytical",
+    "title": "v0.6.1 | Analytical convergence",
+    "subtitle": "Worst error over conductivity stress cases and both current directions",
+    "unit": "Max reaction error (% mean)",
+    "categories": [
+      "8",
+      "16",
+      "32"
+    ],
+    "series": [
+      {
+        "name": "FEM",
+        "values": [
+          1.703269,
+          0.4284684,
+          0.1072382
+        ]
+      },
+      {
+        "name": "FVM",
+        "values": [
+          1.010314,
+          0.311896,
+          0.08629678
+        ]
+      }
+    ],
+    "source": "docs/results/v061_analytical_stress_summary.csv",
+    "max": 2,
+    "gate": 0.2,
+    "xLabel": "Axial mesh elements / cells"
+  },
+  {
+    "id": "05-c20-exploration",
+    "title": "v0.6.1 | Early COMSOL comparison",
+    "subtitle": "Unmatched sequential C/20; different OCV / initial state assumptions",
+    "unit": "Voltage RMSE (mV)",
+    "categories": [
+      "Synthetic",
+      "Digitised",
+      "SoC=0",
+      "j0=0.12"
+    ],
+    "series": [
+      {
+        "name": "charge",
+        "values": [
+          60.481572116649346,
+          64.26550891992133,
+          50.28638846372453,
+          54.03554335128815
+        ]
+      },
+      {
+        "name": "discharge",
+        "values": [
+          147.70298008614355,
+          100.67459217944796,
+          100.67459217947014,
+          100.28195173799567
+        ]
+      }
+    ],
+    "source": "docs/results/comsol_c20_exploratory_metrics.csv",
+    "max": 160
+  },
+  {
+    "id": "06-c20-transfer",
+    "title": "COMSOL C/20 | Physics transfer ablations",
+    "subtitle": "Saved MPH settings; no new refit; logarithmic scale",
+    "unit": "Voltage RMSE (mV)",
+    "categories": [
+      "Full transfer",
+      "No R(θ)",
+      "Constant D"
+    ],
+    "series": [
+      {
+        "name": "charge",
+        "values": [
+          0.09760410550752335,
+          19.64682944950059,
+          1.967483956425659
+        ]
+      },
+      {
+        "name": "discharge",
+        "values": [
+          0.061926329356636514,
+          29.426683183560932,
+          4.996212537407422
+        ]
+      }
+    ],
+    "source": "docs/results/comsol_transfer_c20_summary.csv",
+    "log": true,
+    "min": 0.01,
+    "max": 100,
+    "gate": 1
+  },
+  {
+    "id": "07-multirate-transfer",
+    "title": "COMSOL | Frozen C/20 parameter transfer",
+    "subtitle": "C/10 and C/5 change current only; numerical agreement, not experiments",
+    "unit": "Voltage RMSE (mV)",
+    "categories": [
+      "C/20",
+      "C/10",
+      "C/5"
+    ],
+    "series": [
+      {
+        "name": "charge",
+        "values": [
+          0.09760410550752335,
+          0.27470417623659615,
+          0.7788416324455174
+        ]
+      },
+      {
+        "name": "discharge",
+        "values": [
+          0.061926329356636514,
+          0.25313884557129746,
+          0.20383166853249668
+        ]
+      }
+    ],
+    "source": "docs/results/comsol_transfer_c20_summary.csv; docs/results/comsol_multirate_fem_metrics.csv",
+    "max": 1.2,
+    "gate": 1
+  },
+  {
+    "id": "08-resistance-ablation",
+    "title": "Multirate | Single-particle R sensitivity",
+    "subtitle": "Separate approximate solver; comparison to COMSOL simulations",
+    "unit": "Voltage RMSE (mV)",
+    "categories": [
+      "C/20 chg",
+      "C/20 dis",
+      "C/10 chg",
+      "C/10 dis",
+      "C/5 chg",
+      "C/5 dis"
+    ],
+    "series": [
+      {
+        "name": "no_R",
+        "values": [
+          20.266317,
+          31.067402,
+          40.445863,
+          60.750233,
+          80.556595,
+          113.821262
+        ]
+      },
+      {
+        "name": "frozen_C20",
+        "values": [
+          1.841462,
+          1.879337,
+          5.402771,
+          3.321684,
+          14.737185,
+          5.837464
+        ]
+      },
+      {
+        "name": "rate_specific",
+        "values": [
+          1.842211,
+          1.883062,
+          15.504678,
+          45.068984,
+          38.5656,
+          68.861489
+        ]
+      }
+    ],
+    "source": "docs/results/comsol_multirate_spm_metrics.csv",
+    "max": 120
+  },
+  {
+    "id": "09-capacity-gap",
+    "title": "Multirate | Reference capacity gap",
+    "subtitle": "COMSOL last sampled discharge vs duration-derived reference capacity",
+    "unit": "Specific capacity (mAh/g)",
+    "categories": [
+      "C/20",
+      "C/10",
+      "C/5"
+    ],
+    "series": [
+      {
+        "name": "COMSOL",
+        "values": [
+          147.5,
+          146.423,
+          143.469
+        ]
+      },
+      {
+        "name": "Reference duration",
+        "values": [
+          148.60725000000002,
+          124.7169,
+          99.32010000000001
+        ]
+      }
+    ],
+    "source": "docs/comsol_multirate_holdout.md",
+    "max": 165
+  },
+  {
+    "id": "10-v07-diagnostic",
+    "title": "v0.7 | Frozen added-ASR hypothesis",
+    "subtitle": "Nonnegative C/20 fit = 0; unchanged holdout errors; terminal surrogate only",
+    "unit": "Voltage RMSE (mV)",
+    "categories": [
+      "C/20 chg",
+      "C/20 dis",
+      "C/10 chg",
+      "C/10 dis",
+      "C/5 chg",
+      "C/5 dis"
+    ],
+    "series": [
+      {
+        "name": "Baseline",
+        "values": [
+          31.997242832795834,
+          10.983059107560274,
+          86.61140281299093,
+          181.1323190078246,
+          118.9020856755277,
+          270.4801066623871
+        ]
+      },
+      {
+        "name": "Frozen C/20 ASR",
+        "values": [
+          31.997242832795834,
+          10.983059107560274,
+          86.61140281299093,
+          181.1323190078246,
+          118.9020856755277,
+          270.4801066623871
+        ]
+      }
+    ],
+    "source": "docs/results/v07_asr_diagnostic.csv",
+    "max": 300
+  },
+  {
+    "id": "11-v07-implied-asr",
+    "title": "v0.7 | Implied terminal correction",
+    "subtitle": "Per-stage unconstrained diagnostic, NOT a predictive fit or physical ASR",
+    "unit": "Implied ASR (Ω m²)",
+    "categories": [
+      "C/20",
+      "C/10",
+      "C/5"
+    ],
+    "series": [
+      {
+        "name": "charge",
+        "values": [
+          -0.005009255071704659,
+          0.05978297814313402,
+          0.0602527157942639
+        ]
+      },
+      {
+        "name": "discharge",
+        "values": [
+          -0.0022021143663941423,
+          0.1465031110459315,
+          0.13151721865900415
+        ]
+      }
+    ],
+    "source": "docs/results/v07_asr_diagnostic.csv",
+    "min": -0.025,
+    "max": 0.16
+  }
+]
