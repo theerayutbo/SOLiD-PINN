@@ -1,0 +1,132 @@
+{
+  "schema": 1,
+  "baseline": "v0.9.0b",
+  "integration_commit": "465611e2ed08aa35aa34a0cd27c562ddeb028ad0",
+  "scope": "Synthetic research baseline, not experimental validation or full nonlinear P2D PINN",
+  "source_environment": {
+    "python": "3.13.5 local / 3.13.18 Colab",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "torch": "2.10.0+cpu for PINN experiments"
+  },
+  "experiments": [
+    {
+      "version": "0.8.3",
+      "source": "scripts/inverse_interface.py",
+      "source_blob": "3f86083014bcfc82f7de0c651489ce64a374ba4d",
+      "test": "scripts/test_inverse_interface.py",
+      "test_blob": "e35aa33a1de5aab9a500d0d465722f5b1d420cfb",
+      "report": "docs/v083_inverse_pinn.md",
+      "replay": [
+        "python scripts/inverse_interface.py outputs/baseline/v083.json",
+        "python scripts/matched.py outputs/baseline/v083_matched.json"
+      ],
+      "evidence": "36 local fits; no independent replay verified"
+    },
+    {
+      "version": "0.8.4",
+      "source": "scripts/bayes_interface.py",
+      "source_blob": "71de1e9009ecbb192c3c65055aa83d1659d0c48d",
+      "test": "scripts/test_bayes_interface.py",
+      "test_blob": "8c0cc248d0fe93451f7d0b24d476defdbd25130f",
+      "report": "docs/v084_bayesian_uq.md",
+      "replay": [
+        "python scripts/bayes_interface.py --out outputs/baseline/v084.json"
+      ],
+      "evidence": "108 posterior calculations; aggregate Colab audit"
+    },
+    {
+      "version": "0.8.5",
+      "source": "scripts/mismatch_benchmark.py",
+      "source_blob": "983a906fadbd94f4ec95b0251f302379f4a4cbde",
+      "test": "scripts/test_mismatch_benchmark.py",
+      "test_blob": "4671fd82284614a6cbcd7c6a31ffc0c2286d2876",
+      "report": "docs/v085_model_mismatch.md",
+      "replay": [
+        "python scripts/mismatch_benchmark.py --out outputs/baseline/v085.json"
+      ],
+      "evidence": "24 local fits; no independent replay verified"
+    },
+    {
+      "version": "0.8.6",
+      "source": "scripts/dynamic_benchmark.py",
+      "source_blob": "f17e4fc7799ae46cef8bebb256dd6b0ef281ddad",
+      "test": "scripts/test_dynamic_benchmark.py",
+      "test_blob": "0b91630c4e8f254604065807a20901a45d7942c5",
+      "report": "docs/v086_dynamic_current.md",
+      "replay": [
+        "python scripts/dynamic_benchmark.py --out outputs/baseline/v086.json"
+      ],
+      "evidence": "60 local fits; no independent replay verified"
+    },
+    {
+      "version": "0.8.7",
+      "source": "scripts/constrained.py",
+      "source_blob": "35632a1e21ddc79e5346e75aa5b868a1635ba336",
+      "test": "scripts/test_constrained.py",
+      "test_blob": "0c543ccd644ddfc005e9c8f1455e7040404db0f0",
+      "report": "docs/v087_constrained_neural.md",
+      "replay": [
+        "python scripts/constrained.py --out outputs/baseline/v087.json"
+      ],
+      "evidence": "270 candidates; one nonconverged; 126 selected"
+    },
+    {
+      "version": "0.8.8",
+      "source": "scripts/missing_physics.py",
+      "source_blob": "020dadcf6bcde5b5f445aaf651fd7a994405243f",
+      "test": "scripts/test_missing_physics.py",
+      "test_blob": "4be66b392ae049d2eaff231132b23ed775a64bae",
+      "report": "docs/v088_missing_physics.md",
+      "replay": [
+        "python scripts/missing_physics.py --out outputs/baseline/v088.json"
+      ],
+      "evidence": "162 optimizer fits and 18 fixed evaluations"
+    },
+    {
+      "version": "0.8.9",
+      "source": "scripts/adaptive_closure.py",
+      "source_blob": "d39dca1a4343f701f150683e74c68d389b98c737",
+      "test": "scripts/test_adaptive_closure.py",
+      "test_blob": "b3aa8f794069c606a443bd0d17a6df3ec9092a7a",
+      "report": "docs/v089_adaptive_closure.md",
+      "replay": [
+        "python scripts/adaptive_closure.py --out outputs/baseline/v089.json"
+      ],
+      "evidence": "306 local fits; no independent replay verified"
+    },
+    {
+      "version": "0.9.0a",
+      "source": "scripts/hybrid_p2d.py",
+      "source_blob": "bfd2dc26f1aeb3929d452227bad3034140236d61",
+      "test": "scripts/test_hybrid_p2d.py",
+      "test_blob": "c865881fdd3e5049304a3ef783a6144067ba1433",
+      "report": "docs/v090_hybrid_p2d.md",
+      "replay": [
+        "python scripts/hybrid_p2d.py --out outputs/baseline/v090.json"
+      ],
+      "evidence": "72 fits; Colab reproduced; historical spatial gate FAILED"
+    },
+    {
+      "version": "0.9.0b",
+      "source": "scripts/mesh_bridge.py",
+      "source_blob": "086d4c27d1ad0a4c31e7fa31d21c068a48fc20c9",
+      "test": "scripts/test_mesh_bridge.py",
+      "test_blob": "6bed58d8ae054c1fde8fd838fcb9d25d9c160f9e",
+      "report": "docs/v090b_mesh_bridge.md",
+      "replay": [
+        "python scripts/mesh_bridge.py --out outputs/baseline/v090b.json"
+      ],
+      "evidence": "216 fits; Colab reproduced; final adjacent mesh gate PASS"
+    }
+  ],
+  "additional_blobs": {
+    "scripts/matched.py": "2f4f81e8550b2af96bbc9ab911f97a3baa038afa",
+    "scripts/publish_colab_uq.py": "7ced2d31cbdb4b5501e229d7a47b1d7262d7a876"
+  },
+  "archives": {
+    "docs/results/colab/v084_summary.json": "16003e236c517a925f46d479aa1368f3ae1255f385c9128e9ebe665507bc2269",
+    "docs/results/colab/v090_summary.json": "7293e16504e11f2d0e23db9d2daf89883b5d7f02b9c0d7608893efe24d3f663d",
+    "docs/results/colab/v090b_summary.json": "0a30c47515f2050785636a123d6b3a8b3e42bf86b02327ddaaab51c857cd1e4d"
+  }
+}

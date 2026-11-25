@@ -1,0 +1,35 @@
+name: Research baseline
+on:
+  pull_request:
+    paths:
+      - 'scripts/**'
+      - 'docs/research_baseline_v090b.json'
+      - 'docs/results/colab/**'
+      - 'pyproject.toml'
+      - '.github/workflows/research-baseline.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install reference numerical environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install 'torch==2.10.0' --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install 'numpy==2.3.5' 'scipy==1.17.0' '.[dev]' requests
+      - name: Verify frozen evidence
+        run: python scripts/verify_research_baseline.py
+      - name: Research regression tests
+        run: |
+          python -m pytest -q scripts/test_inverse_interface.py scripts/test_bayes_interface.py scripts/test_mismatch_benchmark.py scripts/test_dynamic_benchmark.py scripts/test_constrained.py scripts/test_missing_physics.py scripts/test_adaptive_closure.py scripts/test_hybrid_p2d.py scripts/test_mesh_bridge.py scripts/test_publish_colab_uq.py
