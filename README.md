@@ -205,3 +205,7 @@ The [rate/fade report](docs/v071_rate_fade_decoupling.md) confirms the published
 ## v0.7.2 independent paper reproduction audit
 
 [Audit report](docs/v072_paper_reproduction_audit.md) distinguishes a constant-D paper-constrained FEM from the collaborator COMSOL reproduction. Literal 0.131 active fraction gives a conditional full-inventory bound of 133.88 mAh/g; the role of porosity and approximate loading requires independent confirmation. Eleven completed stage results and two new atlas figures are archived; no exact reproduction or improved coupled solver claim. Three local synthetic tests passed; repository CI remains to be checked.
+
+## Research baseline v0.9.0b (synthetic)
+
+[Baseline report and replay instructions](docs/research_baseline_v090b.md) · [Frozen manifest](docs/research_baseline_v090b.json). PR #40 integrates v0.8.0–v0.9.0b with Colab evidence; v0.9.0c excluded. The archived v0.9.0b synthetic benchmark has 216 fits and passes the final adjacent mesh gate. Null and extrapolation limitations remain; this is not experimental validation or full coupled P2D-PINN. Run `python scripts/verify_research_baseline.py` and the research regression suite before developing a successor baseline.
