@@ -1,0 +1,4 @@
+design,repeats,noise_mV,R0_covered,Rinf_covered,tau_covered,j0_covered,latent_voltage_j1_covered,latent_voltage_j3_covered,median_R0_width,median_Rinf_width,median_tau_width_h,median_j0_width
+single,30,5,19,30,22,18,23,30,26.7388563,32.66334698,61.88,4.10663197
+matched,30,5,27,27,29,27,27,27,3.81966972,8.09383707,23.14,0.10443722
+multi,30,5,29,28,29,29,30,29,1.23845626,2.37738884,5.78295729,0.04593616
