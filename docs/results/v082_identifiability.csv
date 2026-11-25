@@ -1,0 +1,4 @@
+group,n,abs_current_min_mA_cm2,abs_current_max_mA_cm2,sign_agreement,normalized_singular_ratio
+Pristine,5327,1.0,1.00016,1.0,2.1253567981642738e-06
+2 OPA,17277,1.0,1.0,1.0,1.1338233065125291e-15
+2 Li-OPA,47684,1.0,1.00047,1.0,6.93532917653246e-06
