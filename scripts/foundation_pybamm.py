@@ -58,14 +58,20 @@ def stage(p,nx,nr,rate,kind,step,rtol,previous=None):
     if previous is not None:model.set_initial_conditions_from(previous)
     # Native potential error is amplified by the discrete charge equations.
     # Keep the original absolute physical gates; solve the native DAE more tightly.
-    native_rtol=rtol*.0001
-    native_atol=native_rtol*.01
+    # CI #475: rtol=1e-12/atol=1e-14 passed nine stages, whereas
+    # rtol=1e-13/atol=1e-15 failed during IDA initialisation at t=0.
+    # Bound the requested error weights away from the observed numerical
+    # floor, while keeping the tight configuration stricter than fine.
+    native_rtol=max(rtol*.0001,5e-13)
+    native_atol=max(native_rtol*.01,1e-14)
     root_tol=1e-13
     # IDA's nonlinear convergence test controls state corrections, not the
     # absolute residual of the discretised charge equations. Tighten it
     # separately; leave algebraic variables in the error test.
     nonlinear_coefficient=0.0033
-    nonlinear_coefficient_ic=0.000033
+    # Relax only the tight-case IC line-search stopping coefficient; the
+    # accepted-state residual gates and integration coefficient stay fixed.
+    nonlinear_coefficient_ic=0.00033 if native_rtol<1e-12 else 0.000033
     solver=pybamm.IDAKLUSolver(rtol=native_rtol,atol=native_atol,root_tol=root_tol,
         options={'dt_max':step,'max_num_steps':100000,
                  'nonlinear_convergence_coefficient':nonlinear_coefficient,
