@@ -58,8 +58,19 @@ def stage(p,nx,nr,rate,kind,step,rtol,previous=None):
     if previous is not None:model.set_initial_conditions_from(previous)
     # Native potential error is amplified by the discrete charge equations.
     # Keep the original absolute physical gates; solve the native DAE more tightly.
-    native_rtol=rtol*.01
-    solver=pybamm.IDAKLUSolver(rtol=native_rtol,atol=native_rtol*.01,root_tol=1e-12,options={'dt_max':step,'max_num_steps':100000})
+    native_rtol=rtol*.0001
+    native_atol=native_rtol*.01
+    root_tol=1e-13
+    # IDA's nonlinear convergence test controls state corrections, not the
+    # absolute residual of the discretised charge equations. Tighten it
+    # separately; leave algebraic variables in the error test.
+    nonlinear_coefficient=0.0033
+    nonlinear_coefficient_ic=0.000033
+    solver=pybamm.IDAKLUSolver(rtol=native_rtol,atol=native_atol,root_tol=root_tol,
+        options={'dt_max':step,'max_num_steps':100000,
+                 'nonlinear_convergence_coefficient':nonlinear_coefficient,
+                 'nonlinear_convergence_coefficient_ic':nonlinear_coefficient_ic,
+                 'suppress_algebraic_error':False})
     horizon=1800. if kind=='rest' else 2*rate*3600.
     sol=solver.solve(model,[0.,horizon])
     t=np.asarray(sol.t);end=float(t[-1])
@@ -74,7 +85,21 @@ def stage(p,nx,nr,rate,kind,step,rtol,previous=None):
     assert np.isfinite(current_error).all()
     # The scaled algebraic residual is independently evaluated from saved solver states.
     Y=np.asarray(sol.y)
-    alg=max(float(np.max(np.abs(model.concatenated_algebraic.evaluate(t=float(ti),y=Y[:,i:i+1])))) for i,ti in enumerate(t))
+    residual=np.column_stack([np.asarray(model.concatenated_algebraic.evaluate(
+        t=float(ti),y=Y[:,i:i+1]),dtype=float).reshape(-1) for i,ti in enumerate(t)])
+    assert residual.shape==(2*nx,len(t)) and np.isfinite(residual).all()
+    assert [var.name for var in model.algebraic]==['phi_e','phi_s']
+    def peak(z):
+        z=np.abs(z)
+        cell,sample=np.unravel_index(np.argmax(z),z.shape)
+        return dict(max_abs=float(z[cell,sample]),time_s=float(t[sample]),
+                    cell_index=int(cell),sample_index=int(sample),
+                    initial_max=float(z[:,0].max()),endpoint_max=float(z[:,-1].max()),
+                    location='initial' if sample==0 else 'endpoint' if sample==len(t)-1 else 'interior')
+    alg=float(np.abs(residual).max())
+    alg_e=peak(residual[:nx,:])
+    alg_s=peak(residual[nx:,:])
+    current_peak=peak(current_error.reshape(1,-1))
     continuity=float(np.max(abs(c[:,:,0]-(.8 if previous is None else np.asarray(previous['theta'].entries)[:,:,-1]))))
     term=str(sol.termination)
     expected='rest_complete' if kind=='rest' else 'voltage'
@@ -95,7 +120,10 @@ def stage(p,nx,nr,rate,kind,step,rtol,previous=None):
       time_s=ts.tolist(),voltage=interpolate(v).tolist(),mean_theta=interpolate(mean).tolist(),
       surface_probes=np.column_stack([interpolate(sp[:,i]) for i in range(7)]).tolist(),
       reaction_density_probes=np.column_stack([interpolate(jp[:,i]) for i in range(7)]).tolist(),
-      native_samples=len(t),native_rtol=native_rtol,native_atol=native_rtol*.01,root_tol=1e-12)
+      native_samples=len(t),native_rtol=native_rtol,native_atol=native_atol,root_tol=root_tol,
+      nonlinear_convergence_coefficient=nonlinear_coefficient,
+      nonlinear_convergence_coefficient_ic=nonlinear_coefficient_ic,
+      algebraic_electrolyte=alg_e,algebraic_solid=alg_s,current_peak=current_peak)
     return row,sol
 
 
@@ -110,7 +138,7 @@ def save(path,d):
 
 
 def run(path):
-    p=Params();d=dict(scope='native symbolic single-ion PDE/DAE, PyBaMM FV and IDAKLU; matched synthetic sequential stages',environment=dict(python=platform.python_version(),pybamm=pybamm.__version__,pybammsolvers=importlib.metadata.version('pybammsolvers'),numpy=np.__version__),params=asdict(p),configs=CONFIGS,rows=[],pairs=[],errors=[],complete=False)
+    p=Params();d=dict(scope='native symbolic single-ion PDE/DAE, PyBaMM FV and IDAKLU; matched synthetic sequential stages',environment=dict(python=platform.python_version(),pybamm=pybamm.__version__,pybammsolvers=importlib.metadata.version('pybammsolvers'),numpy=np.__version__,scipy=importlib.metadata.version('scipy')),params=asdict(p),configs=CONFIGS,rows=[],pairs=[],errors=[],complete=False)
     save(path,d);lookup={}
     def add(row,name,label,nx,nr,step,tol):
         row.update(solver=name,config=label,mesh=[nx,nr],step=step,rtol=tol);d['rows'].append(row);lookup[name,label,row['rate'],row['stage']]=row;save(path,d)
