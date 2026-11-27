@@ -56,7 +56,10 @@ def stage(p,nx,nr,rate,kind,step,rtol,previous=None):
     J=p.current_density(rate)*{'charge':-1,'rest':0,'discharge':1}[kind]
     model,mesh=build(p,nx,nr,J,kind)
     if previous is not None:model.set_initial_conditions_from(previous)
-    solver=pybamm.IDAKLUSolver(rtol=rtol,atol=rtol*.01,root_tol=1e-10,options={'dt_max':step,'max_num_steps':100000})
+    # Native potential error is amplified by the discrete charge equations.
+    # Keep the original absolute physical gates; solve the native DAE more tightly.
+    native_rtol=rtol*.01
+    solver=pybamm.IDAKLUSolver(rtol=native_rtol,atol=native_rtol*.01,root_tol=1e-12,options={'dt_max':step,'max_num_steps':100000})
     horizon=1800. if kind=='rest' else 2*rate*3600.
     sol=solver.solve(model,[0.,horizon])
     t=np.asarray(sol.t);end=float(t[-1])
@@ -92,7 +95,7 @@ def stage(p,nx,nr,rate,kind,step,rtol,previous=None):
       time_s=ts.tolist(),voltage=interpolate(v).tolist(),mean_theta=interpolate(mean).tolist(),
       surface_probes=np.column_stack([interpolate(sp[:,i]) for i in range(7)]).tolist(),
       reaction_density_probes=np.column_stack([interpolate(jp[:,i]) for i in range(7)]).tolist(),
-      native_samples=len(t))
+      native_samples=len(t),native_rtol=native_rtol,native_atol=native_rtol*.01,root_tol=1e-12)
     return row,sol
 
 
@@ -118,7 +121,7 @@ def run(path):
                 try:
                     row,prev=stage(p,nx,nr,rate,kind,step,tol,prev)
                     add(row,'PyBaMM',label,nx,nr,step,tol)
-                    print('PyBaMM',label,rate,kind,row['termination'],healthy(row),flush=True)
+                    print('PyBaMM',label,rate,kind,{k:v for k,v in row.items() if not isinstance(v,list)},healthy(row),flush=True)
                     if not healthy(row):raise RuntimeError('native physical/event gate failed')
                 except Exception as e:
                     d['errors'].append(dict(solver='PyBaMM',config=label,rate=rate,stage=kind,error=repr(e)));save(path,d);return d
